@@ -19,7 +19,7 @@ export const login = async (email, password) => {
   const data = await response.json();
 
   if (!response.ok) {
-    throw new Error(data.error?.message || "Login failed");
+    throw new Error("Invalid email or password");
   }
 
   return data;
@@ -44,7 +44,7 @@ export const signup = async (email, password) => {
   const data = await response.json();
 
   if (!response.ok) {
-    throw new Error(data.error?.message || "Signup failed");
+    throw new Error("Signup failed")
   }
 
   return data;
