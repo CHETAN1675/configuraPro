@@ -5,6 +5,7 @@ import Configurator from "../pages/Configurator";
 import ProtectedRoute from "./ProtectedRoute";
 import ProductType from "../features/configurator/steps/ProductType";
 import Dimensions from "../features/configurator/steps/Dimensions";
+import Capacity from "../features/configurator/steps/Capacity";
 
 export default function AppRoutes() {
   return (
@@ -47,6 +48,12 @@ export default function AppRoutes() {
             
           }
         />
+        <Route
+          path="/capacity"
+            element={
+           <Capacity />
+          }
+          />
 
         <Route path="/" element={<Navigate to="/auth" replace />} />
         <Route path="*" element={<Navigate to="/auth" replace />} />
