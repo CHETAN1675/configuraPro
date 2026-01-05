@@ -6,6 +6,6 @@ import ConfiguratorReducer from "../features/configurator/configuratorSlice";
 export const store = configureStore({
   reducer: {
      auth: authReducer,
-     Configurator:ConfiguratorReducer
+     configurator:ConfiguratorReducer
   },
 });

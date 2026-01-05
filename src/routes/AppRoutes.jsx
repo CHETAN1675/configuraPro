@@ -4,6 +4,7 @@ import Dashboard from "../pages/Dashboard";
 import Configurator from "../pages/Configurator";
 import ProtectedRoute from "./ProtectedRoute";
 import ProductType from "../pages/ProductType";
+import Dimensions from "../pages/Dimensions";
 
 export default function AppRoutes() {
   return (
@@ -14,25 +15,36 @@ export default function AppRoutes() {
         <Route
           path="/dashboard"
           element={
-            <ProtectedRoute>
+            
               <Dashboard />
-            </ProtectedRoute>
+           
           }
         />
-          <Route
-          path="/product-type"
-          element={
-            <ProtectedRoute>
-              <ProductType />
-            </ProtectedRoute>
-          }
-        />
+
         <Route
           path="/configurator"
           element={
-            <ProtectedRoute>
+          
               <Configurator />
-            </ProtectedRoute>
+            
+          }
+        />
+
+        <Route
+          path="/product-type"
+          element={
+           
+              <ProductType />
+            
+          }
+        />
+
+        <Route
+          path="/dimensions"
+          element={
+           
+              <Dimensions />
+            
           }
         />
 

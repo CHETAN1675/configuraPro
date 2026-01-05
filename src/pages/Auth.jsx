@@ -1,6 +1,9 @@
-import { useState ,useEffect} from "react";
+import { useState} from "react";
+import { useNavigate } from "react-router-dom";
 import { Container, Form, Button, Card, Alert } from "react-bootstrap";
 import { login, signup } from "../services/authApi";
+
+
 
 
 export default function Auth() {
@@ -10,6 +13,7 @@ export default function Auth() {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
 
 
   const toggleMode = () => {
@@ -40,6 +44,9 @@ export default function Auth() {
         await login(email, password);
         alert("Login successful");
       }
+
+      navigate("/configurator");
+
     } catch (err) {
       setError(err.message);
     } finally {
