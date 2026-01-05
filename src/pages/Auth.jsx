@@ -53,7 +53,7 @@ export default function Auth() {
       <Card style={{ width: "400px" }}>
         <Card.Body>
           <h3 className="text-center mb-4">
-            {isSignup ? "Create Account" : "Login"}
+            {isSignup ? "Signup" : "Login"}
           </h3>
 
           {error && <Alert variant="danger">{error}</Alert>}

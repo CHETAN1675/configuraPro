@@ -1,6 +1,8 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { login, signup } from "../../services/authApi";
 
+const savedAuth = JSON.parse(localStorage.getItem("authData"));
+
 export const loginUser = createAsyncThunk(
   "auth/loginUser",
   async ({ email, password }) => {
@@ -20,8 +22,8 @@ export const signupUser = createAsyncThunk(
 const authSlice = createSlice({
   name: "auth",
   initialState: {
-    userEmail: null,
-    authToken: null,
+    userEmail: savedAuth?.email || null,
+    authToken: savedAuth?.token || null,
     loading: false,
     error: null,
   },
@@ -31,6 +33,7 @@ const authSlice = createSlice({
       state.authToken = null;
       state.loading = false;
       state.error = null;
+       localStorage.removeItem("authData");
     },
   },
   extraReducers: (builder) => {
@@ -44,6 +47,14 @@ const authSlice = createSlice({
         state.loading = false;
         state.userEmail = action.payload.email;
         state.authToken = action.payload.idToken;
+      
+       localStorage.setItem(
+          "authData",
+          JSON.stringify({
+            email: action.payload.email,
+            token: action.payload.idToken,
+          })
+        );
       })
       .addCase(loginUser.rejected, (state, action) => {
         state.loading = false;
@@ -59,6 +70,14 @@ const authSlice = createSlice({
         state.loading = false;
         state.userEmail = action.payload.email;
         state.authToken = action.payload.idToken;
+      
+        localStorage.setItem(
+          "authData",
+          JSON.stringify({
+            email: action.payload.email,
+            token: action.payload.idToken,
+          })
+        );
       })
       .addCase(signupUser.rejected, (state, action) => {
         state.loading = false;

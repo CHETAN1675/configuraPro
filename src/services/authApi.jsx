@@ -1,4 +1,4 @@
-const API_KEY = "FIREBASE_API_KEY";
+import { FIREBASE_API_KEY as API_KEY } from "./firebaseconfig";
 
 export const login = async (email, password) => {
   const response = await fetch(
