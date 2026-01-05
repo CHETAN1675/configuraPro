@@ -1,10 +1,9 @@
-import { Outlet } from "react-router-dom";
+import ProductType from "./ProductType";
 
 export default function Configurator() {
   return (
-    <div>
-      <h1>Product Configurator</h1>
-      <Outlet />
+    <div className="container mt-4">
+      <ProductType />
     </div>
   );
 }

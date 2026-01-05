@@ -1,6 +1,7 @@
-import { useState } from "react";
+import { useState ,useEffect} from "react";
 import { Container, Form, Button, Card, Alert } from "react-bootstrap";
 import { login, signup } from "../services/authApi";
+
 
 export default function Auth() {
   const [isSignup, setIsSignup] = useState(false);
@@ -9,6 +10,7 @@ export default function Auth() {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+
 
   const toggleMode = () => {
     setIsSignup((prev) => !prev);
