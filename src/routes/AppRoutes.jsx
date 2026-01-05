@@ -3,8 +3,8 @@ import Auth from "../pages/Auth";
 import Dashboard from "../pages/Dashboard";
 import Configurator from "../pages/Configurator";
 import ProtectedRoute from "./ProtectedRoute";
-import ProductType from "../pages/ProductType";
-import Dimensions from "../pages/Dimensions";
+import ProductType from "../features/configurator/steps/ProductType";
+import Dimensions from "../features/configurator/steps/Dimensions";
 
 export default function AppRoutes() {
   return (

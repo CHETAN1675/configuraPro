@@ -1,5 +1,5 @@
 import { useDispatch, useSelector } from "react-redux";
-import { setProductType } from "../features/configurator/configuratorSlice";
+import { setProductType } from "../configuratorSlice";
 import { Card, Button,Alert } from "react-bootstrap";
 import { useState } from "react";
 
