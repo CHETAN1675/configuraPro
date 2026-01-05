@@ -3,6 +3,7 @@ import Auth from "../pages/Auth";
 import Dashboard from "../pages/Dashboard";
 import Configurator from "../pages/Configurator";
 import ProtectedRoute from "./ProtectedRoute";
+import ProductType from "../pages/ProductType";
 
 export default function AppRoutes() {
   return (
@@ -18,7 +19,14 @@ export default function AppRoutes() {
             </ProtectedRoute>
           }
         />
-
+          <Route
+          path="/product-type"
+          element={
+            <ProtectedRoute>
+              <ProductType />
+            </ProtectedRoute>
+          }
+        />
         <Route
           path="/configurator"
           element={
