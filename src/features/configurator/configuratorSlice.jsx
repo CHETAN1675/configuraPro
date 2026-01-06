@@ -10,6 +10,7 @@ const initialState = {
    capacity: "",
     addOns: [],
   material: "",
+  error: "",
 };
 
 const configuratorSlice = createSlice({
@@ -44,6 +45,15 @@ const configuratorSlice = createSlice({
     },
      setAddOns(state, action) {
       state.addOns = action.payload;
+       const selected = action.payload;
+      if (selected.includes("Assembly Service") && state.capacity === "Small") {
+        state.error = "Assembly Service is not available for Small capacity";
+      } else if (selected.includes("Warranty") && state.material === "Plastic") {
+        state.error = "Warranty not available for Plastic material";
+      } else {
+        state.error = "";
+        state.addOns = selected;
+      }
     },
     resetConfigurator() {
       return initialState;
