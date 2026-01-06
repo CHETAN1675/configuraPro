@@ -1,13 +1,16 @@
-import { Container, Form, Button, Card } from "react-bootstrap";
-import { useState } from "react";
+import { Container, Card, Form, Button } from "react-bootstrap";
+import { useDispatch, useSelector } from "react-redux";
+import { setCapacity } from "../configuratorSlice";
 
 export default function Capacity() {
-  const [capacity, setCapacity] = useState("");
+  const dispatch = useDispatch();
+  const capacity = useSelector(
+    (state) => state.configurator.capacity
+  );
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    
-    console.log("Capacity:", capacity);
+    console.log("Saved capacity:", capacity);
   };
 
   return (
@@ -22,11 +25,15 @@ export default function Capacity() {
               type="number"
               placeholder="Enter capacity"
               value={capacity}
-              onChange={(e) => setCapacity(e.target.value)}
+              onChange={(e) =>
+                dispatch(setCapacity(e.target.value))
+              }
             />
           </Form.Group>
 
-          <Button type="submit">Save Capacity</Button>
+          <Button type="submit" disabled={!capacity}>
+            Save Capacity
+          </Button>
         </Form>
       </Card>
     </Container>

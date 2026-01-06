@@ -1,12 +1,16 @@
 import { Container, Card, Form, Button } from "react-bootstrap";
-import { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { setMaterial } from "../configuratorSlice";
 
 export default function Material() {
-  const [material, setMaterial] = useState("");
+  const dispatch = useDispatch();
+  const material = useSelector(
+    (state) => state.configurator.material
+  );
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log("Material:", material);
+    console.log("Saved material:", material);
   };
 
   return (
@@ -17,10 +21,11 @@ export default function Material() {
         <Form onSubmit={handleSubmit}>
           <Form.Group className="mb-3">
             <Form.Label>Material</Form.Label>
-
             <Form.Select
               value={material}
-              onChange={(e) => setMaterial(e.target.value)}
+              onChange={(e) =>
+                dispatch(setMaterial(e.target.value))
+              }
             >
               <option value="">Select material</option>
               <option value="steel">Steel</option>

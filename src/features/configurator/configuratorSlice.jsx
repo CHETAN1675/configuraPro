@@ -7,6 +7,8 @@ const initialState = {
     height: "",
     depth: "",
   },
+   capacity: "",
+  material: "",
 };
 
 const configuratorSlice = createSlice({
@@ -19,12 +21,23 @@ const configuratorSlice = createSlice({
      setDimensions(state, action) {
       state.dimensions = action.payload;
      },
+      setCapacity(state, action) {
+      state.capacity = action.payload;
+    },
+    setMaterial(state, action) {
+      state.material = action.payload;
+    },
     resetConfigurator() {
       return initialState;
     },
   },
 });
 
-export const { setProductType,setDimensions, resetConfigurator } = configuratorSlice.actions;
+export const { setProductType,
+               setDimensions,
+               setCapacity,
+               setMaterial,
+               resetConfigurator
+               } = configuratorSlice.actions;
 
 export default configuratorSlice.reducer;
