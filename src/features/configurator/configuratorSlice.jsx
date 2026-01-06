@@ -8,6 +8,7 @@ const initialState = {
     depth: "",
   },
    capacity: "",
+    addOns: [],
   material: "",
 };
 
@@ -41,6 +42,9 @@ const configuratorSlice = createSlice({
         state.error = "";
       }
     },
+     setAddOns(state, action) {
+      state.addOns = action.payload;
+    },
     resetConfigurator() {
       return initialState;
     },
@@ -51,7 +55,8 @@ export const { setProductType,
                setDimensions,
                setCapacity,
                setMaterial,
-               resetConfigurator
+                setAddOns,
+               resetConfigurator,
                } = configuratorSlice.actions;
 
 export default configuratorSlice.reducer;

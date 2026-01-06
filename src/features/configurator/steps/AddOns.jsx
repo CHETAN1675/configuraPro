@@ -1,35 +1,52 @@
-import { Container, Card, Form, Button } from "react-bootstrap";
+import { useDispatch, useSelector } from "react-redux";
+import { Container, Card, Form, Button, Alert } from "react-bootstrap";
+import { setAddOns } from "../configuratorSlice";
+import { useState } from "react";
 
 export default function AddOns() {
+  const dispatch = useDispatch();
+  const selectedAddOns = useSelector((state) => state.configurator.addOns);
+  const error = useSelector((state) => state.configurator.error);
+
+  const [localAddOns, setLocalAddOns] = useState(selectedAddOns);
+
+  const addOnsOptions = ["Warranty", "Assembly Service", "Delivery Protection"];
+
+  const toggleAddOn = (addOn) => {
+    if (localAddOns.includes(addOn)) {
+      setLocalAddOns(localAddOns.filter((item) => item !== addOn));
+    } else {
+      setLocalAddOns([...localAddOns, addOn]);
+    }
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log("Add-ons selected");
+    dispatch(setAddOns(localAddOns));
+    console.log("Saved AddOns:", localAddOns);
   };
 
   return (
     <Container className="mt-4">
       <Card className="p-4">
-        <h4 className="mb-3">Select Add-ons</h4>
+        <h4 className="mb-3">Select Add-Ons</h4>
+
+        {error && <Alert variant="danger">{error}</Alert>}
 
         <Form onSubmit={handleSubmit}>
-          <Form.Check
-            type="checkbox"
-            label="Extended Warranty"
-            className="mb-2"
-          />
-          <Form.Check
-            type="checkbox"
-            label="Installation Service"
-            className="mb-2"
-          />
-          <Form.Check
-            type="checkbox"
-            label="Premium Support"
-            className="mb-3"
-          />
+          {addOnsOptions.map((addOn) => (
+            <Form.Check
+              key={addOn}
+              type="checkbox"
+              label={addOn}
+              checked={localAddOns.includes(addOn)}
+              onChange={() => toggleAddOn(addOn)}
+              className="mb-2"
+            />
+          ))}
 
-          <Button type="submit">
-            Save Add-ons
+          <Button type="submit" disabled={localAddOns.length === 0}>
+            Save Add-Ons
           </Button>
         </Form>
       </Card>
