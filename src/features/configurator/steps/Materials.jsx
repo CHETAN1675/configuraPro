@@ -1,11 +1,15 @@
-import { Container, Card, Form, Button } from "react-bootstrap";
+import { Container, Card, Form, Button, Alert } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { setMaterial } from "../configuratorSlice";
 
 export default function Material() {
   const dispatch = useDispatch();
+
   const material = useSelector(
     (state) => state.configurator.material
+  );
+  const error = useSelector(
+    (state) => state.configurator.error
   );
 
   const handleSubmit = (e) => {
@@ -21,6 +25,7 @@ export default function Material() {
         <Form onSubmit={handleSubmit}>
           <Form.Group className="mb-3">
             <Form.Label>Material</Form.Label>
+
             <Form.Select
               value={material}
               onChange={(e) =>
@@ -28,13 +33,19 @@ export default function Material() {
               }
             >
               <option value="">Select material</option>
-              <option value="steel">Steel</option>
-              <option value="aluminum">Aluminum</option>
-              <option value="plastic">Plastic</option>
+              <option value="Steel">Steel</option>
+              <option value="Aluminum">Aluminum</option>
+              <option value="Plastic">Plastic</option>
             </Form.Select>
           </Form.Group>
 
-          <Button type="submit" disabled={!material}>
+          {error && (
+            <Alert variant="danger" className="mb-3">
+              {error}
+            </Alert>
+          )}
+
+          <Button type="submit" disabled={!material || error}>
             Save Material
           </Button>
         </Form>

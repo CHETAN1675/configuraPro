@@ -1,11 +1,15 @@
-import { Container, Card, Form, Button } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
+import { Form, Alert, Container, Card, Button } from "react-bootstrap";
 import { setCapacity } from "../configuratorSlice";
 
 export default function Capacity() {
   const dispatch = useDispatch();
+
   const capacity = useSelector(
     (state) => state.configurator.capacity
+  );
+  const error = useSelector(
+    (state) => state.configurator.error
   );
 
   const handleSubmit = (e) => {
@@ -21,17 +25,27 @@ export default function Capacity() {
         <Form onSubmit={handleSubmit}>
           <Form.Group className="mb-3">
             <Form.Label>Capacity</Form.Label>
-            <Form.Control
-              type="number"
-              placeholder="Enter capacity"
+
+            <Form.Select
               value={capacity}
               onChange={(e) =>
                 dispatch(setCapacity(e.target.value))
               }
-            />
+            >
+              <option value="">Select capacity</option>
+              <option value="Small">Small</option>
+              <option value="Medium">Medium</option>
+              <option value="Large">Large</option>
+            </Form.Select>
           </Form.Group>
 
-          <Button type="submit" disabled={!capacity}>
+          {error && (
+            <Alert variant="danger" className="mb-3">
+              {error}
+            </Alert>
+          )}
+
+          <Button type="submit" disabled={!capacity || error}>
             Save Capacity
           </Button>
         </Form>
