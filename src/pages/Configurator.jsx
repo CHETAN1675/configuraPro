@@ -17,6 +17,9 @@ export default function Configurator() {
           <Link to="/dimensions">
             <Button variant="outline-primary">Dimensions</Button>
           </Link>
+          <Link to="/material">
+          <Button variant="outline-primary">Material</Button>
+          </Link>
         </div>
       </Card>
     </div>

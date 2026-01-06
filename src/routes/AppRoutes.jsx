@@ -6,6 +6,7 @@ import ProtectedRoute from "./ProtectedRoute";
 import ProductType from "../features/configurator/steps/ProductType";
 import Dimensions from "../features/configurator/steps/Dimensions";
 import Capacity from "../features/configurator/steps/Capacity";
+import Material from "../features/configurator/steps/Materials";
 
 export default function AppRoutes() {
   return (
@@ -54,6 +55,12 @@ export default function AppRoutes() {
            <Capacity />
           }
           />
+
+          <Route
+           path="/materials"
+           element={
+            <Material/>
+           }/>
 
         <Route path="/" element={<Navigate to="/auth" replace />} />
         <Route path="*" element={<Navigate to="/auth" replace />} />
