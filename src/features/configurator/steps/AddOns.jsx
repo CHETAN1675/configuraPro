@@ -1,20 +1,25 @@
 import { useDispatch, useSelector } from "react-redux";
 import { Container, Card, Form, Button, Alert } from "react-bootstrap";
 import { setAddOns } from "../configuratorSlice";
-import { useState,useEffect } from "react";
+import { useState, useEffect } from "react";
+import {selectPrimaryError,selectDisabledAddOns} from "../../rules/RuleSelectors";
 
 export default function AddOns() {
   const dispatch = useDispatch();
+
   const selectedAddOns = useSelector((state) => state.configurator.addOns);
-  const error = useSelector((state) => state.configurator.error);
-  const capacity = useSelector((state) => state.configurator.capacity);
-  const material = useSelector((state) => state.configurator.material);
+  const error = useSelector(selectPrimaryError);
+  const disabledAddOns = useSelector(selectDisabledAddOns);
 
   const [localAddOns, setLocalAddOns] = useState(selectedAddOns);
 
-  const addOnsOptions = ["Warranty", "Assembly Service", "Delivery Protection"];
+  const addOnsOptions = [
+    "Warranty",
+    "Assembly Service",
+    "Delivery Protection",
+  ];
 
-   useEffect(() => {
+  useEffect(() => {
     setLocalAddOns(selectedAddOns);
   }, [selectedAddOns]);
 
@@ -29,10 +34,9 @@ export default function AddOns() {
   const handleSubmit = (e) => {
     e.preventDefault();
     dispatch(setAddOns(localAddOns));
-    console.log("Saved AddOns:", localAddOns);
   };
 
- return (
+  return (
     <Container className="mt-4">
       <Card className="p-4">
         <h4 className="mb-3">Select Add-Ons</h4>
@@ -48,15 +52,11 @@ export default function AddOns() {
               checked={localAddOns.includes(addOn)}
               onChange={() => toggleAddOn(addOn)}
               className="mb-2"
-              disabled={
-                // disable invalid options based on current capacity/material
-                (addOn === "Assembly Service" && capacity === "Small") ||
-                (addOn === "Warranty" && material === "Plastic")
-              }
+              disabled={disabledAddOns[addOn]}
             />
           ))}
 
-          <Button type="submit" disabled={localAddOns.length === 0 || !!error}>
+          <Button type="submit" disabled={!!error}>
             Save Add-Ons
           </Button>
         </Form>

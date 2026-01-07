@@ -1,40 +1,32 @@
 import { useDispatch, useSelector } from "react-redux";
 import { setProductType } from "../configuratorSlice";
-import { Card, Button,Alert } from "react-bootstrap";
-import { useState } from "react";
+import { Card, Button, Alert } from "react-bootstrap";
+import { selectPrimaryError } from "../../rules/RuleSelectors";
 
 export default function ProductType() {
   const dispatch = useDispatch();
+
   const productType = useSelector(
     (state) => state.configurator.productType
   );
-
-   const [showError, setShowError] = useState(false);
+  const error = useSelector(selectPrimaryError);
 
   const handleSelect = (type) => {
     dispatch(setProductType(type));
-    setShowError(false);
   };
 
   const handleNext = () => {
-    if (!productType) {
-      setShowError(true);
-      return;
-    }
-
-    
+    if (!productType) return;
     console.log("Product type valid:", productType);
   };
-
 
   return (
     <Card className="p-4">
       <h4 className="mb-3">Select Product Type</h4>
 
-
-      {showError && (
+      {error && (
         <Alert variant="danger">
-          Please select a product type to continue
+          {error}
         </Alert>
       )}
 
@@ -54,8 +46,7 @@ export default function ProductType() {
         </Button>
       </div>
 
-     
-      <Button variant="success" onClick={handleNext}>
+      <Button variant="success" onClick={handleNext} disabled={!productType || !!error}>
         Next
       </Button>
     </Card>

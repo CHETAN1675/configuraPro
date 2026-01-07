@@ -1,34 +1,30 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Form, Button, Alert } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { setDimensions } from "../configuratorSlice";
+import { selectPrimaryError } from "../../rules/RuleSelectors";
 
 export default function Dimensions() {
   const dispatch = useDispatch();
-  const dimensions = useSelector(
-    (state) => state.configurator.dimensions
-  );
+
+  const dimensions = useSelector((state) => state.configurator.dimensions);
+  const error = useSelector(selectPrimaryError);
 
   const [width, setWidth] = useState(dimensions.width || "");
   const [height, setHeight] = useState(dimensions.height || "");
   const [depth, setDepth] = useState(dimensions.depth || "");
-  const [error, setError] = useState("");
+
+  // Sync local state when Redux state changes
+  useEffect(() => {
+    setWidth(dimensions.width || "");
+    setHeight(dimensions.height || "");
+    setDepth(dimensions.depth || "");
+  }, [dimensions]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    if (!width || !height || !depth) {
-      setError("All dimensions are required");
-      return;
-    }
-
-    if (width <= 0 || height <= 0 || depth <= 0) {
-      setError("Dimensions must be greater than zero");
-      return;
-    }
-
-    setError("");
-
+    // Dispatch raw values to Redux
     dispatch(
       setDimensions({
         width: Number(width),
@@ -36,8 +32,6 @@ export default function Dimensions() {
         depth: Number(depth),
       })
     );
-
-   
   };
 
   return (
@@ -71,7 +65,9 @@ export default function Dimensions() {
         />
       </Form.Group>
 
-      <Button type="submit">Save Dimensions</Button>
+      <Button type="submit" disabled={!!error}>
+        Save Dimensions
+      </Button>
     </Form>
   );
 }

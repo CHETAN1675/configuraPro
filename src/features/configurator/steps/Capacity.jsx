@@ -1,6 +1,7 @@
 import { useDispatch, useSelector } from "react-redux";
 import { Form, Alert, Container, Card, Button } from "react-bootstrap";
 import { setCapacity } from "../configuratorSlice";
+import { selectPrimaryError } from "../../rules/RuleSelectors";
 
 export default function Capacity() {
   const dispatch = useDispatch();
@@ -8,13 +9,10 @@ export default function Capacity() {
   const capacity = useSelector(
     (state) => state.configurator.capacity
   );
-  const error = useSelector(
-    (state) => state.configurator.error
-  );
+  const error = useSelector(selectPrimaryError);
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log("Saved capacity:", capacity);
   };
 
   return (
@@ -45,7 +43,7 @@ export default function Capacity() {
             </Alert>
           )}
 
-          <Button type="submit" disabled={!capacity || error}>
+          <Button type="submit" disabled={!capacity || !!error}>
             Save Capacity
           </Button>
         </Form>

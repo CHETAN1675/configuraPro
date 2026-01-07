@@ -1,20 +1,17 @@
 import { Container, Card, Form, Button, Alert } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { setMaterial } from "../configuratorSlice";
+import { selectPrimaryError } from "../../rules/RuleSelectors";
 
 export default function Material() {
   const dispatch = useDispatch();
 
-  const material = useSelector(
-    (state) => state.configurator.material
-  );
-  const error = useSelector(
-    (state) => state.configurator.error
-  );
+  const material = useSelector((state) => state.configurator.material);
+  const error = useSelector(selectPrimaryError);
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log("Saved material:", material);
+    dispatch(setMaterial(material));
   };
 
   return (
@@ -28,9 +25,7 @@ export default function Material() {
 
             <Form.Select
               value={material}
-              onChange={(e) =>
-                dispatch(setMaterial(e.target.value))
-              }
+              onChange={(e) => dispatch(setMaterial(e.target.value))}
             >
               <option value="">Select material</option>
               <option value="Steel">Steel</option>
@@ -45,7 +40,7 @@ export default function Material() {
             </Alert>
           )}
 
-          <Button type="submit" disabled={!material || error}>
+          <Button type="submit" disabled={!material || !!error}>
             Save Material
           </Button>
         </Form>

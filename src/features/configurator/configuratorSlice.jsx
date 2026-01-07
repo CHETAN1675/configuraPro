@@ -11,7 +11,6 @@ const initialState = {
   capacity: "",
   material: "",
   addOns: [],
-  error: "",
 };
 
 const configuratorSlice = createSlice({
@@ -20,30 +19,24 @@ const configuratorSlice = createSlice({
   reducers: {
     setProductType(state, action) {
       state.productType = action.payload;
-      state.error = "";
+      
     },
 
     setDimensions(state, action) {
       state.dimensions = action.payload;
-      state.error = "";
+      
     },
 
     setCapacity(state, action) {
       state.capacity = action.payload;
-      const errors = validateConfiguration(state);
-      state.error = errors[0] || "";
     },
 
     setMaterial(state, action) {
       state.material = action.payload;
-      const errors = validateConfiguration(state);
-      state.error = errors[0] || "";
     },
 
     setAddOns(state, action) {
       state.addOns = action.payload;
-      const errors = validateConfiguration(state);
-      state.error = errors[0] || "";
     },
 
     resetConfigurator() {
