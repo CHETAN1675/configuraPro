@@ -1,15 +1,18 @@
 import { Link } from "react-router-dom";
-import { Card, Button } from "react-bootstrap";
+import { Card, Button, Row, Col } from "react-bootstrap";
+import ConfigSummary from "../features/configurator/ConfigSummary";
 
 export default function Configurator() {
   return (
     <div className="container mt-4">
+      <Row>
+        <Col md={8}>
       <Card className="p-4">
         <h4 className="mb-3">Configurator</h4>
 
         <p>Select a step to continue:</p>
 
-        <div className="d-flex gap-3">
+        <div className="d-flex gap-3 flex-wrap">
           <Link to="/product-type">
             <Button variant="primary">Product Type</Button>
           </Link>
@@ -21,7 +24,12 @@ export default function Configurator() {
           <Button variant="outline-primary">Material</Button>
           </Link>
         </div>
+        <Col md={4}>
+        <ConfigSummary/>
+        </Col>
       </Card>
+      </Col>
+      </Row>
     </div>
   );
 }
