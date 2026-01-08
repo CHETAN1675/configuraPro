@@ -1,9 +1,12 @@
 import { useSelector, useDispatch } from "react-redux";
 import { Card, ListGroup, Button } from "react-bootstrap";
-import { removeFromCart, clearCart } from "../features/cart/cartSlice";
+import { clearCart } from "../features/cart/cartSlice";
+import { useNavigate } from "react-router-dom";
 
-export default function Cart() {
+export default function Checkout() {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+
   const items = useSelector((state) => state.cart.items);
 
   const totalPrice = items.reduce(
@@ -15,9 +18,16 @@ export default function Cart() {
     return <p className="mt-4">Your cart is empty</p>;
   }
 
+  const handlePlaceOrder = () => {
+    // Here we will call Firebase to save the order
+    
+    dispatch(clearCart());
+    navigate("/order-success");
+  };
+
   return (
     <div className="container mt-4">
-      <h3>Shopping Cart</h3>
+      <h3>Checkout</h3>
       <ListGroup className="mb-3">
         {items.map((item, index) => (
           <ListGroup.Item key={item.id || index}>
@@ -29,18 +39,7 @@ export default function Cart() {
                 {item.capacity} | {item.material} |{" "}
                 {item.addOns.join(", ")}
               </div>
-              <div>
-                <span className="me-3">
-                  ${item.totalPrice || 0}
-                </span>
-                <Button
-                  variant="danger"
-                  size="sm"
-                  onClick={() => dispatch(removeFromCart(index))}
-                >
-                  Remove
-                </Button>
-              </div>
+              <div>${item.totalPrice || 0}</div>
             </div>
           </ListGroup.Item>
         ))}
@@ -48,14 +47,10 @@ export default function Cart() {
 
       <Card className="p-3">
         <h5>Total: ${totalPrice}</h5>
-        <Button
-          variant="secondary"
-          onClick={() => dispatch(clearCart())}
-        >
-          Clear Cart
+        <Button variant="success" onClick={handlePlaceOrder}>
+          Place Order
         </Button>
       </Card>
     </div>
   );
 }
-

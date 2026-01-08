@@ -76,15 +76,16 @@ export default function AppRoutes() {
            path="/products/:productId"
            element={<ProductDetails />}
            />
-          
-
           <Route path="/products" 
           element={<ProductList />}
            />
            <Route path="/cart" 
            element={<Cart />} 
+           />        
+          <Route path="/checkout"
+          element={<Checkout />}
            />
-
+           
         <Route path="/" element={<Navigate to="/auth" replace />} />
         <Route path="*" element={<Navigate to="/auth" replace />} />
       </Routes>
