@@ -1,6 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
+  product: null, 
   productType: "",
   dimensions: { width: "", height: "", depth: "" },
   capacity: "",
@@ -28,7 +29,7 @@ const configuratorSlice = createSlice({
       state.addOns = action.payload;
     },
 
-    /* Used when editing saved configuration */
+
     loadConfiguration(state, action) {
       return { ...state, ...action.payload };
     },

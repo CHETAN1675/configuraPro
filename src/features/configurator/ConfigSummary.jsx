@@ -1,14 +1,13 @@
 import { Card, Alert, ListGroup, Button } from "react-bootstrap";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
-import {
-  selectWarnings,
-  selectPrimaryError,
-} from "../rules/RuleSelectors";
+import {selectWarnings,selectPrimaryError} from "../rules/RuleSelectors";
 import { selectTotalPrice } from "../pricing/pricingSelectors";
 
 export default function ConfigSummary() {
   const config = useSelector((state) => state.configurator);
+  const product = useSelector((state) => state.configurator.product);
+
   const totalPrice = useSelector(selectTotalPrice);
   const warnings = useSelector(selectWarnings);
   const error = useSelector(selectPrimaryError);
@@ -16,6 +15,13 @@ export default function ConfigSummary() {
   return (
     <Card className="p-4 mt-4">
       <h4 className="mb-3">Configuration Summary</h4>
+
+      {/* Selected product */}
+      {product && (
+        <p className="mb-3">
+          <strong>Product:</strong> {product.name}
+        </p>
+      )}
 
       <ListGroup className="mb-3">
         <ListGroup.Item>
@@ -63,10 +69,10 @@ export default function ConfigSummary() {
         </ListGroup.Item>
       </ListGroup>
 
-    
+      {/* Blocking error */}
       {error && <Alert variant="danger">{error}</Alert>}
 
-     
+      {/* Non-blocking warnings */}
       {warnings.length > 0 && (
         <Alert variant="warning">
           <ListGroup variant="flush">
@@ -79,7 +85,6 @@ export default function ConfigSummary() {
         </Alert>
       )}
 
-      {/* Live price */}
       <h5 className="mt-3">
         Total Price: <strong>${totalPrice}</strong>
       </h5>
