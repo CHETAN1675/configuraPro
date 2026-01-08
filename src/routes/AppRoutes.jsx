@@ -9,6 +9,7 @@ import Capacity from "../features/configurator/steps/Capacity";
 import Material from "../features/configurator/steps/Materials";
 import AddOns from "../features/configurator/steps/AddOns";
 import ProductList from "../pages/ProductList";
+import ProductDetails from "../pages/ProductDetails";
 
 
 export default function AppRoutes() {
@@ -70,6 +71,10 @@ export default function AppRoutes() {
            element={
             <AddOns />
             }
+           />
+           <Route
+           path="/products/:productId"
+           element={<ProductDetails />}
            />
           
 

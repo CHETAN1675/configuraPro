@@ -12,3 +12,5 @@ export const products = [
     basePrice: 1200,
   },
 ];
+export const getProductById = (id) =>
+  products.find((p) => p.id === id);
