@@ -11,6 +11,7 @@ import AddOns from "../features/configurator/steps/AddOns";
 import ProductList from "../pages/ProductList";
 import ProductDetails from "../pages/ProductDetails";
 import Cart from "../pages/Cart";
+import Checkout from "../pages/Checkout";
 
 export default function AppRoutes() {
   return (
@@ -85,7 +86,7 @@ export default function AppRoutes() {
           <Route path="/checkout"
           element={<Checkout />}
            />
-           
+
         <Route path="/" element={<Navigate to="/auth" replace />} />
         <Route path="*" element={<Navigate to="/auth" replace />} />
       </Routes>

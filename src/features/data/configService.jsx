@@ -23,7 +23,7 @@ export const saveConfiguration = async (userId, configuration) => {
 
   return response.json(); // generated id
 };
-
+// load configs
 export const loadConfigurations = async (userId) => {
   if (!userId) throw new Error("User not authenticated");
 
@@ -44,7 +44,7 @@ export const loadConfigurations = async (userId) => {
   }));
 };
 
-
+// update configs
 export const updateConfiguration = async (
   userId,
   configId,
@@ -66,7 +66,7 @@ export const updateConfiguration = async (
     throw new Error("Failed to update configuration");
   }
 };
-
+// delete configs
 export const deleteConfiguration = async (userId, configId) => {
   const response = await fetch(
     `${FIREBASE_DB_URL}/configurations/${userId}/${configId}.json`,
