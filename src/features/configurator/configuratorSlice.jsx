@@ -1,13 +1,8 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { validateConfiguration } from "../rules/RulesEngine";
 
 const initialState = {
   productType: "",
-  dimensions: {
-    width: "",
-    height: "",
-    depth: "",
-  },
+  dimensions: { width: "", height: "", depth: "" },
   capacity: "",
   material: "",
   addOns: [],
@@ -19,24 +14,23 @@ const configuratorSlice = createSlice({
   reducers: {
     setProductType(state, action) {
       state.productType = action.payload;
-      
     },
-
     setDimensions(state, action) {
       state.dimensions = action.payload;
-      
     },
-
     setCapacity(state, action) {
       state.capacity = action.payload;
     },
-
     setMaterial(state, action) {
       state.material = action.payload;
     },
-
     setAddOns(state, action) {
       state.addOns = action.payload;
+    },
+
+    /* Used when editing saved configuration */
+    loadConfiguration(state, action) {
+      return { ...state, ...action.payload };
     },
 
     resetConfigurator() {
@@ -51,6 +45,7 @@ export const {
   setCapacity,
   setMaterial,
   setAddOns,
+  loadConfiguration,
   resetConfigurator,
 } = configuratorSlice.actions;
 
