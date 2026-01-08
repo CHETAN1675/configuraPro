@@ -10,7 +10,7 @@ import Material from "../features/configurator/steps/Materials";
 import AddOns from "../features/configurator/steps/AddOns";
 import ProductList from "../pages/ProductList";
 import ProductDetails from "../pages/ProductDetails";
-
+import Cart from "../pages/Cart";
 
 export default function AppRoutes() {
   return (
@@ -80,6 +80,9 @@ export default function AppRoutes() {
 
           <Route path="/products" 
           element={<ProductList />}
+           />
+           <Route path="/cart" 
+           element={<Cart />} 
            />
 
         <Route path="/" element={<Navigate to="/auth" replace />} />

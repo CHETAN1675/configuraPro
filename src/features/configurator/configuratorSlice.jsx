@@ -13,6 +13,9 @@ const configuratorSlice = createSlice({
   name: "configurator",
   initialState,
   reducers: {
+      setProduct(state, action) {
+      state.product = action.payload;
+    },
     setProductType(state, action) {
       state.productType = action.payload;
     },
@@ -28,8 +31,6 @@ const configuratorSlice = createSlice({
     setAddOns(state, action) {
       state.addOns = action.payload;
     },
-
-
     loadConfiguration(state, action) {
       return { ...state, ...action.payload };
     },
@@ -41,6 +42,7 @@ const configuratorSlice = createSlice({
 });
 
 export const {
+  setProduct,
   setProductType,
   setDimensions,
   setCapacity,

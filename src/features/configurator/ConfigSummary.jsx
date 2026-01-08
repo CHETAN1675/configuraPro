@@ -1,9 +1,8 @@
 import { Card, Alert, ListGroup, Button } from "react-bootstrap";
-import { useSelector } from "react-redux";
+import { useSelector,useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
 import {selectWarnings,selectPrimaryError} from "../rules/RuleSelectors";
 import { selectTotalPrice } from "../pricing/pricingSelectors";
-import { useDispatch, useSelector } from "react-redux";
 import { addToCart } from "../cart/cartSlice";
 
 export default function ConfigSummary() {
@@ -13,6 +12,7 @@ export default function ConfigSummary() {
   const totalPrice = useSelector(selectTotalPrice);
   const warnings = useSelector(selectWarnings);
   const error = useSelector(selectPrimaryError);
+  const dispatch = useDispatch()
 
     const handleAddToCart = () => {
     if (!product) {
