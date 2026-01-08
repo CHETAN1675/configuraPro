@@ -8,6 +8,8 @@ import Dimensions from "../features/configurator/steps/Dimensions";
 import Capacity from "../features/configurator/steps/Capacity";
 import Material from "../features/configurator/steps/Materials";
 import AddOns from "../features/configurator/steps/AddOns";
+import ProductList from "../pages/ProductList";
+
 
 export default function AppRoutes() {
   return (
@@ -68,6 +70,11 @@ export default function AppRoutes() {
            element={
             <AddOns />
             }
+           />
+          
+
+          <Route path="/products" 
+          element={<ProductList />}
            />
 
         <Route path="/" element={<Navigate to="/auth" replace />} />
