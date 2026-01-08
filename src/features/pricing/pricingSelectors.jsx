@@ -1,9 +1,4 @@
-import {
-  BASE_PRICES,
-  CAPACITY_MULTIPLIER,
-  MATERIAL_PRICES,
-  ADDON_PRICES,
-} from "./pricingUtils";
+import { BASE_PRICES,CAPACITY_MULTIPLIER,MATERIAL_PRICES, ADDON_PRICES,} from "./pricingUtils";
 
 export const selectBasePrice = (state) => {
   const { productType } = state.configurator;
