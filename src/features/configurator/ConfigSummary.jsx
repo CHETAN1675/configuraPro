@@ -3,6 +3,8 @@ import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import {selectWarnings,selectPrimaryError} from "../rules/RuleSelectors";
 import { selectTotalPrice } from "../pricing/pricingSelectors";
+import { useDispatch, useSelector } from "react-redux";
+import { addToCart } from "../cart/cartSlice";
 
 export default function ConfigSummary() {
   const config = useSelector((state) => state.configurator);
@@ -11,6 +13,17 @@ export default function ConfigSummary() {
   const totalPrice = useSelector(selectTotalPrice);
   const warnings = useSelector(selectWarnings);
   const error = useSelector(selectPrimaryError);
+
+    const handleAddToCart = () => {
+    if (!product) {
+      alert("Select a product first");
+      return;
+    }
+
+    dispatch(addToCart({ ...config, id: Date.now() }));
+    alert("Configuration added to cart!");
+  };
+
 
   return (
     <Card className="p-4 mt-4">
@@ -88,6 +101,14 @@ export default function ConfigSummary() {
       <h5 className="mt-3">
         Total Price: <strong>${totalPrice}</strong>
       </h5>
+        <Button
+        variant="success"
+        className="mt-3"
+        onClick={handleAddToCart}
+        disabled={!!error} 
+      >
+        Add to Cart
+      </Button>
     </Card>
   );
 }
