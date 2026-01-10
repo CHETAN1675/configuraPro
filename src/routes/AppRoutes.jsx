@@ -12,6 +12,7 @@ import ProductList from "../pages/ProductList";
 import ProductDetails from "../pages/ProductDetails";
 import Cart from "../pages/Cart";
 import Checkout from "../pages/Checkout";
+import OrderSuccess from "../pages/OrderSuccess";
 
 export default function AppRoutes() {
   return (
@@ -85,6 +86,9 @@ export default function AppRoutes() {
            />        
           <Route path="/checkout"
           element={<Checkout />}
+           />
+           <Route path="/order-success"
+            element={<OrderSuccess />}
            />
 
         <Route path="/" element={<Navigate to="/auth" replace />} />
