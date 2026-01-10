@@ -17,7 +17,7 @@ import OrderHistory from "../pages/OrderHistory";
 
 export default function AppRoutes() {
   return (
-    <BrowserRouter>
+    
       <Routes>
         <Route path="/auth" element={<Auth />} />
 
@@ -98,6 +98,6 @@ export default function AppRoutes() {
         <Route path="/" element={<Navigate to="/auth" replace />} />
         <Route path="*" element={<Navigate to="/auth" replace />} />
       </Routes>
-    </BrowserRouter>
+    
   );
 }

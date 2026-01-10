@@ -1,7 +1,7 @@
 import { Card, Alert, ListGroup, Button } from "react-bootstrap";
 import { useSelector,useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
-import {selectWarnings,selectPrimaryError} from "../rules/RuleSelectors";
+import {selectPrimaryError} from "../rules/RuleSelectors";
 import { selectTotalPrice } from "../pricing/pricingSelectors";
 import { addToCart } from "../cart/cartSlice";
 
@@ -10,9 +10,13 @@ export default function ConfigSummary() {
   const product = useSelector((state) => state.configurator.product);
 
   const totalPrice = useSelector(selectTotalPrice);
-  const warnings = useSelector(selectWarnings);
   const error = useSelector(selectPrimaryError);
   const dispatch = useDispatch()
+
+  const warnings = [];
+  if (config.capacity === "Medium" && config.material === "Plastic") {
+  warnings.push("Plastic with Medium capacity may reduce durability");
+  }
 
     const handleAddToCart = () => {
     if (!product) {
