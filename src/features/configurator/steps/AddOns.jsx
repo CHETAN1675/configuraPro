@@ -3,9 +3,11 @@ import { Container, Card, Form, Button, Alert } from "react-bootstrap";
 import { setAddOns } from "../configuratorSlice";
 import { useState, useEffect } from "react";
 import {selectPrimaryError,selectDisabledAddOns} from "../../rules/RuleSelectors";
+import { useNavigate } from "react-router-dom";
 
 export default function AddOns() {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const selectedAddOns = useSelector((state) => state.configurator.addOns);
   const error = useSelector(selectPrimaryError);
@@ -34,6 +36,7 @@ export default function AddOns() {
   const handleSubmit = (e) => {
     e.preventDefault();
     dispatch(setAddOns(localAddOns));
+    navigate("/configurator")
   };
 
   return (

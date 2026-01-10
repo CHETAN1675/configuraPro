@@ -1,9 +1,11 @@
 import { Card, Alert, ListGroup, Button } from "react-bootstrap";
 import { useSelector,useDispatch } from "react-redux";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import {selectPrimaryError} from "../rules/RuleSelectors";
 import { selectTotalPrice } from "../pricing/pricingSelectors";
 import { addToCart } from "../cart/cartSlice";
+import { resetConfigurator } from "../configurator/configuratorSlice";
+
 
 export default function ConfigSummary() {
   const config = useSelector((state) => state.configurator);
@@ -11,7 +13,8 @@ export default function ConfigSummary() {
 
   const totalPrice = useSelector(selectTotalPrice);
   const error = useSelector(selectPrimaryError);
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const warnings = [];
   if (config.capacity === "Medium" && config.material === "Plastic") {
@@ -25,7 +28,8 @@ export default function ConfigSummary() {
     }
 
     dispatch(addToCart({ ...config, id: Date.now() }));
-    alert("Configuration added to cart!");
+    dispatch(resetConfigurator());
+    navigate("/cart")
   };
 
 

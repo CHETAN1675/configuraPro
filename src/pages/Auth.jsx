@@ -45,7 +45,7 @@ export default function Auth() {
         alert("Login successful");
       }
 
-      navigate("/configurator");
+      navigate("/product");
 
     } catch (err) {
       setError(err.message);

@@ -2,9 +2,12 @@ import { useDispatch, useSelector } from "react-redux";
 import { setProductType } from "../configuratorSlice";
 import { Card, Button, Alert } from "react-bootstrap";
 import { selectPrimaryError } from "../../rules/RuleSelectors";
+import { useNavigate } from "react-router-dom";
+
 
 export default function ProductType() {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const productType = useSelector(
     (state) => state.configurator.productType
@@ -17,7 +20,7 @@ export default function ProductType() {
 
   const handleNext = () => {
     if (!productType) return;
-    console.log("Product type valid:", productType);
+    navigate("/dimensions");
   };
 
   return (

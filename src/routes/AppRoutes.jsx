@@ -1,103 +1,166 @@
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
-import Auth from "../pages/Auth";
-import Dashboard from "../pages/Dashboard";
-import Configurator from "../pages/Configurator";
+import { Routes, Route, Navigate } from "react-router-dom";
+import { Suspense, lazy } from "react";
 import ProtectedRoute from "./ProtectedRoute";
-import ProductType from "../features/configurator/steps/ProductType";
-import Dimensions from "../features/configurator/steps/Dimensions";
-import Capacity from "../features/configurator/steps/Capacity";
-import Material from "../features/configurator/steps/Materials";
-import AddOns from "../features/configurator/steps/AddOns";
-import ProductList from "../pages/ProductList";
-import ProductDetails from "../pages/ProductDetails";
-import Cart from "../pages/Cart";
-import Checkout from "../pages/Checkout";
-import OrderSuccess from "../pages/OrderSuccess";
-import OrderHistory from "../pages/OrderHistory";
+
+// Lazy-loaded pages 
+const Auth = lazy(() => import("../pages/Auth"));
+const Dashboard = lazy(() => import("../pages/Dashboard"));
+const Configurator = lazy(() => import("../pages/Configurator"));
+const ProductList = lazy(() => import("../pages/ProductList"));
+const ProductDetails = lazy(() => import("../pages/ProductDetails"));
+const Cart = lazy(() => import("../pages/Cart"));
+const Checkout = lazy(() => import("../pages/Checkout"));
+const OrderSuccess = lazy(() => import("../pages/OrderSuccess"));
+const OrderHistory = lazy(() => import("../pages/OrderHistory"));
+
+// Lazy-loaded configurator steps 
+const ProductType = lazy(() =>
+  import("../features/configurator/steps/ProductType")
+);
+const Dimensions = lazy(() =>
+  import("../features/configurator/steps/Dimensions")
+);
+const Capacity = lazy(() =>
+  import("../features/configurator/steps/Capacity")
+);
+const Material = lazy(() =>
+  import("../features/configurator/steps/Materials")
+);
+const AddOns = lazy(() =>
+  import("../features/configurator/steps/AddOns")
+);
 
 export default function AppRoutes() {
   return (
-    
+    <Suspense fallback={<div className="text-center mt-5">Loading...</div>}>
       <Routes>
+        {/* Public */}
         <Route path="/auth" element={<Auth />} />
 
+        {/* Protected */}
         <Route
           path="/dashboard"
           element={
-            
+            <ProtectedRoute>
               <Dashboard />
-           
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/products"
+          element={
+            <ProtectedRoute>
+              <ProductList />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/products/:productId"
+          element={
+            <ProtectedRoute>
+              <ProductDetails />
+            </ProtectedRoute>
           }
         />
 
         <Route
           path="/configurator"
           element={
-          
+            <ProtectedRoute>
               <Configurator />
-            
+            </ProtectedRoute>
           }
         />
 
+        {/* Configurator steps */}
         <Route
           path="/product-type"
           element={
-           
+            <ProtectedRoute>
               <ProductType />
-            
+            </ProtectedRoute>
           }
         />
 
         <Route
           path="/dimensions"
           element={
-           
+            <ProtectedRoute>
               <Dimensions />
-            
+            </ProtectedRoute>
           }
         />
+
         <Route
           path="/capacity"
-            element={
-           <Capacity />
+          element={
+            <ProtectedRoute>
+              <Capacity />
+            </ProtectedRoute>
           }
-          />
+        />
 
-          <Route
-           path="/materials"
-           element={
-            <Material/>
-           }/>
+        <Route
+          path="/materials"
+          element={
+            <ProtectedRoute>
+              <Material />
+            </ProtectedRoute>
+          }
+        />
 
-           <Route
-           path="/addons"
-           element={
-            <AddOns />
-            }
-           />
-           <Route
-           path="/products/:productId"
-           element={<ProductDetails />}
-           />
-          <Route path="/products" 
-          element={<ProductList />}
-           />
-           <Route path="/cart" 
-           element={<Cart />} 
-           />        
-          <Route path="/checkout"
-          element={<Checkout />}
-           />
-           <Route path="/order-success"
-            element={<OrderSuccess />}
-           />
-           <Route path="/orders"
-           element={<OrderHistory/>}
-           />
+        <Route
+          path="/addons"
+          element={
+            <ProtectedRoute>
+              <AddOns />
+            </ProtectedRoute>
+          }
+        />
 
+        {/* Cart & orders */}
+        <Route
+          path="/cart"
+          element={
+            <ProtectedRoute>
+              <Cart />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/checkout"
+          element={
+            <ProtectedRoute>
+              <Checkout />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/order-success"
+          element={
+            <ProtectedRoute>
+              <OrderSuccess />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/orders"
+          element={
+            <ProtectedRoute>
+              <OrderHistory />
+            </ProtectedRoute>
+          }
+        />
+
+        {/* Redirects */}
         <Route path="/" element={<Navigate to="/auth" replace />} />
         <Route path="*" element={<Navigate to="/auth" replace />} />
       </Routes>
-    
+    </Suspense>
   );
 }

@@ -3,28 +3,26 @@ import { Form, Button, Alert } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { setDimensions } from "../configuratorSlice";
 import { selectPrimaryError } from "../../rules/RuleSelectors";
+import { useNavigate } from "react-router-dom";
 
 export default function Dimensions() {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const dimensions = useSelector((state) => state.configurator.dimensions);
   const error = useSelector(selectPrimaryError);
 
-  const [width, setWidth] = useState(dimensions.width || "");
-  const [height, setHeight] = useState(dimensions.height || "");
-  const [depth, setDepth] = useState(dimensions.depth || "");
+  const [width, setWidth] = useState("");
+  const [height, setHeight] = useState("");
+  const [depth, setDepth] = useState("");
 
-  // Sync local state when Redux state changes
   useEffect(() => {
     setWidth(dimensions.width || "");
     setHeight(dimensions.height || "");
     setDepth(dimensions.depth || "");
   }, [dimensions]);
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-
-    // Dispatch raw values to Redux
+  const saveDimensions = () => {
     dispatch(
       setDimensions({
         width: Number(width),
@@ -34,8 +32,18 @@ export default function Dimensions() {
     );
   };
 
+  const handleSave = () => {
+    saveDimensions();
+    navigate("/configurator");
+  };
+
+  const handleNext = () => {
+    saveDimensions();
+    navigate("/capacity");
+  };
+
   return (
-    <Form onSubmit={handleSubmit}>
+    <Form>
       {error && <Alert variant="danger">{error}</Alert>}
 
       <Form.Group className="mb-3">
@@ -65,9 +73,23 @@ export default function Dimensions() {
         />
       </Form.Group>
 
-      <Button type="submit" disabled={!!error}>
-        Save Dimensions
-      </Button>
+      <div className="d-flex gap-2">
+        <Button
+          variant="secondary"
+          onClick={handleSave}
+          disabled={!!error}
+        >
+          Save
+        </Button>
+
+        <Button
+          variant="primary"
+          onClick={handleNext}
+          disabled={!!error}
+        >
+          Next
+        </Button>
+      </div>
     </Form>
   );
 }

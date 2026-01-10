@@ -3,19 +3,28 @@ import { login, signup } from "../../services/authApi";
 
 const savedAuth = JSON.parse(localStorage.getItem("authData"));
 
+
 export const loginUser = createAsyncThunk(
   "auth/loginUser",
-  async ({ email, password }) => {
-    const data = await login(email, password);
-    return data;
+  async ({ email, password }, { rejectWithValue }) => {
+    try {
+      const data = await login(email, password);
+      return data;
+    } catch (err) {
+      return rejectWithValue(err.message); 
+    }
   }
 );
 
 export const signupUser = createAsyncThunk(
   "auth/signupUser",
-  async ({ email, password }) => {
-    const data = await signup(email, password);
-    return data;
+  async ({ email, password }, { rejectWithValue }) => {
+    try {
+      const data = await signup(email, password);
+      return data;
+    } catch (err) {
+      return rejectWithValue(err.message);
+    }
   }
 );
 
@@ -33,12 +42,12 @@ const authSlice = createSlice({
       state.authToken = null;
       state.loading = false;
       state.error = null;
-       localStorage.removeItem("authData");
+      localStorage.removeItem("authData");
     },
   },
   extraReducers: (builder) => {
     builder
-      // for login
+      // Login
       .addCase(loginUser.pending, (state) => {
         state.loading = true;
         state.error = null;
@@ -47,8 +56,8 @@ const authSlice = createSlice({
         state.loading = false;
         state.userEmail = action.payload.email;
         state.authToken = action.payload.idToken;
-      
-       localStorage.setItem(
+
+        localStorage.setItem(
           "authData",
           JSON.stringify({
             email: action.payload.email,
@@ -58,10 +67,10 @@ const authSlice = createSlice({
       })
       .addCase(loginUser.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.error.message;
+        state.error = action.payload || action.error.message;
       })
 
-      // for signup
+      // Signup
       .addCase(signupUser.pending, (state) => {
         state.loading = true;
         state.error = null;
@@ -70,7 +79,7 @@ const authSlice = createSlice({
         state.loading = false;
         state.userEmail = action.payload.email;
         state.authToken = action.payload.idToken;
-      
+
         localStorage.setItem(
           "authData",
           JSON.stringify({
@@ -81,7 +90,7 @@ const authSlice = createSlice({
       })
       .addCase(signupUser.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.error.message;
+        state.error = action.payload || action.error.message;
       });
   },
 });
