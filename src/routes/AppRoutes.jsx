@@ -13,6 +13,7 @@ import ProductDetails from "../pages/ProductDetails";
 import Cart from "../pages/Cart";
 import Checkout from "../pages/Checkout";
 import OrderSuccess from "../pages/OrderSuccess";
+import OrderHistory from "../pages/OrderHistory";
 
 export default function AppRoutes() {
   return (
@@ -89,6 +90,9 @@ export default function AppRoutes() {
            />
            <Route path="/order-success"
             element={<OrderSuccess />}
+           />
+           <Route path="/orders"
+           element={<OrderHistory/>}
            />
 
         <Route path="/" element={<Navigate to="/auth" replace />} />
