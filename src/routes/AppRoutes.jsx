@@ -1,6 +1,8 @@
 import { Routes, Route, Navigate } from "react-router-dom";
 import { Suspense, lazy } from "react";
 import ProtectedRoute from "./ProtectedRoute";
+import { useSelector } from "react-redux";
+
 
 // Lazy-loaded pages 
 const Auth = lazy(() => import("../pages/Auth"));
@@ -30,12 +32,21 @@ const AddOns = lazy(() =>
   import("../features/configurator/steps/AddOns")
 );
 
+
+
 export default function AppRoutes() {
+
+  const authToken = useSelector((state)=> state.auth.authToken);
+  
   return (
     <Suspense fallback={<div className="text-center mt-5">Loading...</div>}>
       <Routes>
         {/* Public */}
-        <Route path="/auth" element={<Auth />} />
+        <Route path="/auth" 
+        element={
+          authToken ? <Navigate to="/products" replace/> : <Auth />
+          } 
+          />
 
         {/* Protected */}
         <Route

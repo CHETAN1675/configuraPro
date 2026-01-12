@@ -1,58 +1,49 @@
-import { useState} from "react";
-import { useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { Container, Form, Button, Card, Alert } from "react-bootstrap";
-import { login, signup } from "../services/authApi";
-
-
-
+import { loginUser, signupUser } from "../features/auth/authSlice";
 
 export default function Auth() {
   const [isSignup, setIsSignup] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [error, setError] = useState("");
-  const [loading, setLoading] = useState(false);
-  const navigate = useNavigate();
+  const [localError, setLocalError] = useState("");
 
+  const dispatch = useDispatch();
+ 
+
+  const { loading, error, authToken } = useSelector(
+    (state) => state.auth
+  );
 
   const toggleMode = () => {
     setIsSignup((prev) => !prev);
-    setError("");
+    setLocalError("");
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
-    setError("");
+    setLocalError("");
 
     if (!email || !password) {
-      setError("Email and password are required");
+      setLocalError("Email and password are required");
       return;
     }
 
     if (isSignup && password !== confirmPassword) {
-      setError("Passwords do not match");
+      setLocalError("Passwords do not match");
       return;
     }
 
-    try {
-      setLoading(true);
-      if (isSignup) {
-        await signup(email, password);
-        alert("Account created successfully");
-      } else {
-        await login(email, password);
-        alert("Login successful");
-      }
-
-      navigate("/product");
-
-    } catch (err) {
-      setError(err.message);
-    } finally {
-      setLoading(false);
+    if (isSignup) {
+      dispatch(signupUser({ email, password }));
+    } else {
+      dispatch(loginUser({ email, password }));
     }
   };
+
+
 
   return (
     <Container
@@ -65,7 +56,11 @@ export default function Auth() {
             {isSignup ? "Signup" : "Login"}
           </h3>
 
-          {error && <Alert variant="danger">{error}</Alert>}
+          {(localError || error) && (
+            <Alert variant="danger">
+              {localError || error}
+            </Alert>
+          )}
 
           <Form onSubmit={handleSubmit}>
             <Form.Group className="mb-3">
