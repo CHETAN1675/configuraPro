@@ -1,9 +1,10 @@
 const FIREBASE_DB_URL =
   "https://configurapro-default-rtdb.firebaseio.com";
 
-const normalizeEmailKey = (email) =>
-  email.replace(".", "_");
+const normalizeEmailKey = (email) => email.replace(".", "_");
 
+//Save a new order for a user
+ 
 export const saveOrder = async (userEmail, order) => {
   if (!userEmail) {
     throw new Error("User not authenticated");
@@ -32,8 +33,13 @@ export const saveOrder = async (userEmail, order) => {
   return response.json();
 };
 
+
+ // Load all orders for a user
+
 export const loadOrders = async (userEmail) => {
-  if (!userEmail) throw new Error("User not authenticated");
+  if (!userEmail) {
+    throw new Error("User not authenticated");
+  }
 
   const userKey = normalizeEmailKey(userEmail);
 
@@ -46,6 +52,7 @@ export const loadOrders = async (userEmail) => {
   }
 
   const data = await response.json();
+
   if (!data) return [];
 
   return Object.entries(data).map(([id, order]) => ({

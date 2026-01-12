@@ -1,17 +1,17 @@
 import { useEffect, useState } from "react";
-import { Card, ListGroup, Alert } from "react-bootstrap";
+import { Card, ListGroup, Alert, Badge } from "react-bootstrap";
 import { useSelector } from "react-redux";
 import { loadOrders } from "../services/orderService";
 
 export default function OrderHistory() {
-  const userEmail = useSelector(
-    (state) => state.auth.userEmail
-  );
+  const userEmail = useSelector((state) => state.auth.userEmail);
 
   const [orders, setOrders] = useState([]);
   const [error, setError] = useState(null);
 
   useEffect(() => {
+    if (!userEmail) return;
+
     const fetchOrders = async () => {
       try {
         const data = await loadOrders(userEmail);
@@ -23,6 +23,14 @@ export default function OrderHistory() {
 
     fetchOrders();
   }, [userEmail]);
+
+  if (!userEmail) {
+    return (
+      <Alert variant="warning" className="mt-4">
+        Please login to view your orders
+      </Alert>
+    );
+  }
 
   if (error) {
     return <Alert variant="danger">{error}</Alert>;
@@ -38,12 +46,17 @@ export default function OrderHistory() {
 
       {orders.map((order) => (
         <Card key={order.id} className="mb-3 p-3">
-          <p>
-            <strong>Order Date:</strong>{" "}
-            {new Date(order.createdAt).toLocaleString()}
-          </p>
+          <div className="d-flex justify-content-between align-items-center mb-2">
+            <div>
+              <strong>Order Date:</strong>{" "}
+              {new Date(order.createdAt).toLocaleString()}
+            </div>
+            <Badge bg="secondary">
+              {order.status || "CREATED"}
+            </Badge>
+          </div>
 
-          <ListGroup>
+          <ListGroup className="mb-2">
             {order.items.map((item, index) => (
               <ListGroup.Item key={index}>
                 <strong>
@@ -54,9 +67,14 @@ export default function OrderHistory() {
             ))}
           </ListGroup>
 
-          <h6 className="mt-2">
-            Total: ${order.totalPrice}
-          </h6>
+          <div className="d-flex justify-content-between">
+            <div>
+              <strong>Payment:</strong>{" "}
+              {order.paymentMethod?.type || "N/A"} (
+              {order.paymentMethod?.status || "PENDING"})
+            </div>
+            <strong>Total: ${order.totalPrice}</strong>
+          </div>
         </Card>
       ))}
     </div>
