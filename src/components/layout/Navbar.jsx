@@ -1,10 +1,13 @@
-import { Navbar, Nav, Container } from "react-bootstrap";
+import { Navbar, Nav, Container,Badge} from "react-bootstrap";
+import { Cart } from "react-bootstrap-icons";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { logout } from "../../features/auth/authSlice";
 
+
 export default function AppNavbar() {
-const authToken = useSelector((state => state.auth.authToken))
+const authToken = useSelector((state) => state.auth.authToken)
+const totalQuantity = useSelector((state)=>state.cart.totalQuantity)
 const navigate = useNavigate();
 const dispatch = useDispatch();
 
@@ -29,8 +32,18 @@ const dispatch = useDispatch();
             <Nav.Link as={Link} to="/configurator">
               Configurator
             </Nav.Link>
-            <Nav.Link as={Link} to="/cart">
-              Cart
+              <Nav.Link as={Link} to="/cart" className="position-relative">
+              <Cart size={20} />
+              {totalQuantity > 0 && (
+                <Badge
+                  bg="danger"
+                  pill
+                  className="position-absolute top-5 start-100 translate-middle"
+                 
+                >
+                  {totalQuantity}
+                </Badge>
+              )}
             </Nav.Link>
             <Nav.Link as={Link} to="/orders">
               Orders
@@ -42,7 +55,7 @@ const dispatch = useDispatch();
 
           <Nav>
             {!authToken?
-            <Nav.Link as={Link} to="/login">
+            <Nav.Link as={Link} to="/auth">
               Login
             </Nav.Link>:
             <Nav.Link onClick={handleLogout} style={{ cursor: "pointer" }}>
