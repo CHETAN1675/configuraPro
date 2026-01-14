@@ -1,75 +1,79 @@
 import { useEffect, useState } from "react";
-import { Card, Button, Alert } from "react-bootstrap";
-import { useDispatch, useSelector } from "react-redux";
-import {
-  loadConfigurations,
-  deleteConfiguration,
-} from "../features/data/configService";
-import { loadConfiguration } from "../features/configurator/configuratorSlice";
-import { useNavigate } from "react-router-dom";
+import { Card, Row, Col, Alert } from "react-bootstrap";
+import { useSelector } from "react-redux";
+import { loadOrders } from "../services/orderService";
 
 export default function Dashboard() {
-  const user = useSelector((state) => state.auth.user);
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
+  const userEmail = useSelector((state) => state.auth.userEmail);
 
-  const [configs, setConfigs] = useState([]);
+  const [stats, setStats] = useState({
+    pending: 0,
+    delivered: 0,
+    cancelled: 0,
+  });
+
   const [error, setError] = useState("");
 
-  const fetchConfigs = async () => {
-    try {
-      const data = await loadConfigurations(user.uid);
-      setConfigs(data);
-    } catch {
-      setError("Failed to load configurations");
-    }
-  };
-
   useEffect(() => {
-    if (user) fetchConfigs();
-  }, [user]);
+    if (!userEmail) return;
 
-  const handleEdit = (config) => {
-    dispatch(loadConfiguration(config));
-    navigate("/configurator");
-  };
+    const fetchOrders = async () => {
+      try {
+        const orders = await loadOrders(userEmail);
 
-  const handleDelete = async (id) => {
-    await deleteConfiguration(user.uid, id);
-    fetchConfigs();
-  };
+        const pending = orders.filter(
+          (o) => o.status === "CREATED" || o.status === "PENDING"
+        ).length;
+
+        const delivered = orders.filter(
+          (o) => o.status === "DELIVERED"
+        ).length;
+
+        const cancelled = orders.filter(
+          (o) => o.status === "CANCELLED"
+        ).length;
+
+        setStats({ pending, delivered, cancelled });
+      } catch (err) {
+        setError("Failed to load order stats");
+      }
+    };
+
+    fetchOrders();
+  }, [userEmail]);
+
+  if (!userEmail) {
+    return <Alert variant="warning">Please login</Alert>;
+  }
 
   return (
-    <Card className="p-4">
-      <h4>Saved Configurations</h4>
+    <div className="container mt-4">
+      <h3 className="mb-4">Dashboard</h3>
 
       {error && <Alert variant="danger">{error}</Alert>}
 
-      {configs.length === 0 && <p>No saved configurations</p>}
+      <Row>
+        <Col md={4}>
+          <Card className="text-center p-4">
+            <h6 className="text-muted">Pending Orders</h6>
+            <h2 className="text-warning">{stats.pending}</h2>
+          </Card>
+        </Col>
 
-      {configs.map((config) => (
-        <Card key={config.id} className="p-3 mb-2">
-          <p>
-            <strong>Product:</strong> {config.productType}
-          </p>
-          <p>
-            <strong>Material:</strong> {config.material}
-          </p>
+        <Col md={4}>
+          <Card className="text-center p-4">
+            <h6 className="text-muted">Delivered Orders</h6>
+            <h2 className="text-success">{stats.delivered}</h2>
+          </Card>
+        </Col>
 
-          <div className="d-flex gap-2">
-            <Button size="sm" onClick={() => handleEdit(config)}>
-              Edit
-            </Button>
-            <Button
-              size="sm"
-              variant="danger"
-              onClick={() => handleDelete(config.id)}
-            >
-              Delete
-            </Button>
-          </div>
-        </Card>
-      ))}
-    </Card>
+        <Col md={4}>
+          <Card className="text-center p-4">
+            <h6 className="text-muted">Cancelled Orders</h6>
+            <h2 className="text-danger">{stats.cancelled}</h2>
+          </Card>
+        </Col>
+      </Row>
+    </div>
   );
 }
