@@ -3,6 +3,8 @@ import { Cart } from "react-bootstrap-icons";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { logout } from "../../features/auth/authSlice";
+import logo from "../../assets/logo.png";
+
 
 
 export default function AppNavbar() {
@@ -19,18 +21,23 @@ const dispatch = useDispatch();
   return (
     <Navbar bg="dark" variant="dark" expand="md">
       <Container fluid>
-        <Navbar.Brand as={Link} to="/">
-          ConfiguraPro
-        </Navbar.Brand>
+       <Navbar.Brand as={Link} to="/" className="d-flex align-items-center gap-2">
+       <img
+       src={logo}
+       alt="ConfiguraPro"
+       width="40"
+       height="40"
+       className="d-inline-block align-top"
+       />
+       <span className="fw-bold">ConfiguraPro</span>
+      </Navbar.Brand>
+
 
         <Navbar.Toggle />
         <Navbar.Collapse>
           <Nav className="me-auto">
             <Nav.Link as={Link} to="/products">
               Products
-            </Nav.Link>
-            <Nav.Link as={Link} to="/configurator">
-              Configurator
             </Nav.Link>
               <Nav.Link as={Link} to="/cart" className="position-relative">
               <Cart size={20} />

@@ -1,6 +1,5 @@
 import { useSelector, useDispatch } from "react-redux";
 import { Card, ListGroup, Button } from "react-bootstrap";
-import { clearCart } from "../features/cart/cartSlice";
 import { useNavigate } from "react-router-dom";
 import { saveCart } from "../services/cartService";
 

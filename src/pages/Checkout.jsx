@@ -3,6 +3,7 @@ import { Card, ListGroup, Button, Form } from "react-bootstrap";
 import { clearCart } from "../features/cart/cartSlice";
 import { useNavigate } from "react-router-dom";
 import { saveOrder } from "../services/orderService";
+import { saveCart } from "../services/cartService";
 import { useState } from "react";
 
 export default function Checkout() {
@@ -37,6 +38,7 @@ export default function Checkout() {
       });
 
       dispatch(clearCart());
+      dispatch(saveCart(userEmail, []));
       navigate("/order-success");
     } catch (err) {
       console.error(err);
