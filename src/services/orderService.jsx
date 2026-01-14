@@ -60,3 +60,28 @@ export const loadOrders = async (userEmail) => {
     ...order,
   }));
 };
+
+
+// Update order status (Cancel, Admin updates, etc.)
+export const updateOrderStatus = async (userEmail, orderId, status) => {
+  if (!userEmail || !orderId) {
+    throw new Error("Missing order details");
+  }
+
+  const userKey = normalizeEmailKey(userEmail);
+
+  const response = await fetch(
+    `${FIREBASE_DB_URL}/orders/${userKey}/${orderId}.json`,
+    {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ status }),
+    }
+  );
+
+  if (!response.ok) {
+    throw new Error("Failed to update order status");
+  }
+};

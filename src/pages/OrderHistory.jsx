@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
-import { Card, ListGroup, Alert, Badge } from "react-bootstrap";
+import { Card, ListGroup, Alert, Badge, Button } from "react-bootstrap";
 import { useSelector } from "react-redux";
-import { loadOrders } from "../services/orderService";
+import { loadOrders, updateOrderStatus } from "../services/orderService";
 
 export default function OrderHistory() {
   const userEmail = useSelector((state) => state.auth.userEmail);
@@ -23,6 +23,29 @@ export default function OrderHistory() {
 
     fetchOrders();
   }, [userEmail]);
+
+  const handleCancelOrder = async (orderId) => {
+    const confirmCancel = window.confirm(
+      "Are you sure you want to cancel this order?"
+    );
+
+    if (!confirmCancel) return;
+
+    try {
+      await updateOrderStatus(userEmail, orderId, "CANCELLED");
+
+      // Update UI instantly
+      setOrders((prevOrders) =>
+        prevOrders.map((order) =>
+          order.id === orderId
+            ? { ...order, status: "CANCELLED" }
+            : order
+        )
+      );
+    } catch (err) {
+      alert("Failed to cancel order");
+    }
+  };
 
   if (!userEmail) {
     return (
@@ -51,7 +74,7 @@ export default function OrderHistory() {
               <strong>Order Date:</strong>{" "}
               {new Date(order.createdAt).toLocaleString()}
             </div>
-            <Badge bg="secondary">
+            <Badge bg={order.status === "CANCELLED" ? "danger" : "secondary"}>
               {order.status || "CREATED"}
             </Badge>
           </div>
@@ -59,22 +82,33 @@ export default function OrderHistory() {
           <ListGroup className="mb-2">
             {order.items.map((item, index) => (
               <ListGroup.Item key={index}>
-                <strong>
-                  {item.product?.name || "Product"}
-                </strong>{" "}
-                — ${item.totalPrice}
+                <strong>{item.product?.name || "Product"}</strong> — $
+                {item.totalPrice}
               </ListGroup.Item>
             ))}
           </ListGroup>
 
-          <div className="d-flex justify-content-between">
+          <div className="d-flex justify-content-between align-items-center">
             <div>
               <strong>Payment:</strong>{" "}
               {order.paymentMethod?.type || "N/A"} (
               {order.paymentMethod?.status || "PENDING"})
             </div>
+
             <strong>Total: ${order.totalPrice}</strong>
           </div>
+
+          {order.status === "CREATED" && (
+            <div className="mt-3 text-end">
+              <Button
+                variant="danger"
+                size="sm"
+                onClick={() => handleCancelOrder(order.id)}
+              >
+                Cancel Order
+              </Button>
+            </div>
+          )}
         </Card>
       ))}
     </div>
