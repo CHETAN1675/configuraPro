@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Container, Form, Button, Card, Alert } from "react-bootstrap";
 import { loginUser, signupUser } from "../features/auth/authSlice";
+import { loadCart } from "../services/cartService";
 
 export default function Auth() {
   const [isSignup, setIsSignup] = useState(false);
@@ -11,16 +12,16 @@ export default function Auth() {
   const [localError, setLocalError] = useState("");
 
   const dispatch = useDispatch();
- 
 
-  const { loading, error, authToken } = useSelector(
+  const { loading, error, userEmail } = useSelector(
     (state) => state.auth
   );
 
-  const toggleMode = () => {
-    setIsSignup((prev) => !prev);
-    setLocalError("");
-  };
+  useEffect(() => {
+    if (userEmail) {
+      dispatch(loadCart(userEmail));
+    }
+  }, [userEmail, dispatch]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -43,13 +44,8 @@ export default function Auth() {
     }
   };
 
-
-
   return (
-    <Container
-      className="d-flex justify-content-center align-items-center"
-      style={{ minHeight: "100vh" }}
-    >
+    <Container className="d-flex justify-content-center align-items-center" style={{ minHeight: "100vh" }}>
       <Card style={{ width: "400px" }}>
         <Card.Body>
           <h3 className="text-center mb-4">
@@ -67,7 +63,6 @@ export default function Auth() {
               <Form.Label>Email</Form.Label>
               <Form.Control
                 type="email"
-                placeholder="Enter email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
               />
@@ -77,7 +72,6 @@ export default function Auth() {
               <Form.Label>Password</Form.Label>
               <Form.Control
                 type="password"
-                placeholder="Enter password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
               />
@@ -88,7 +82,6 @@ export default function Auth() {
                 <Form.Label>Confirm Password</Form.Label>
                 <Form.Control
                   type="password"
-                  placeholder="Confirm password"
                   value={confirmPassword}
                   onChange={(e) =>
                     setConfirmPassword(e.target.value)
@@ -97,51 +90,10 @@ export default function Auth() {
               </Form.Group>
             )}
 
-            <Button
-              variant="primary"
-              type="submit"
-              className="w-100"
-              disabled={loading}
-            >
-              {loading
-                ? "Please wait..."
-                : isSignup
-                ? "Create Account"
-                : "Login"}
+            <Button type="submit" className="w-100" disabled={loading}>
+              {loading ? "Please wait..." : isSignup ? "Create Account" : "Login"}
             </Button>
           </Form>
-
-          <div className="text-center mt-3">
-            {isSignup ? (
-              <>
-                Already have an account?{" "}
-                <span
-                  onClick={toggleMode}
-                  style={{
-                    color: "#0d6efd",
-                    cursor: "pointer",
-                    textDecoration: "underline",
-                  }}
-                >
-                  Login
-                </span>
-              </>
-            ) : (
-              <>
-                Don’t have an account?{" "}
-                <span
-                  onClick={toggleMode}
-                  style={{
-                    color: "#0d6efd",
-                    cursor: "pointer",
-                    textDecoration: "underline",
-                  }}
-                >
-                  Create new account
-                </span>
-              </>
-            )}
-          </div>
         </Card.Body>
       </Card>
     </Container>

@@ -3,13 +3,16 @@ import { useSelector,useDispatch } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import {selectPrimaryError} from "../rules/RuleSelectors";
 import { selectTotalPrice } from "../pricing/pricingSelectors";
-import { addToCart } from "../cart/cartSlice";
 import { resetConfigurator } from "../configurator/configuratorSlice";
+import { saveCart } from "../../services/cartService";
 
 
 export default function ConfigSummary() {
   const config = useSelector((state) => state.configurator);
   const product = useSelector((state) => state.configurator.product);
+  const items = useSelector((state) => state.cart.items);
+const userEmail = useSelector((state) => state.auth.userEmail);
+
 
   const totalPrice = useSelector(selectTotalPrice);
   const error = useSelector(selectPrimaryError);
@@ -20,17 +23,28 @@ export default function ConfigSummary() {
   if (config.capacity === "Medium" && config.material === "Plastic") {
   warnings.push("Plastic with Medium capacity may reduce durability");
   }
+const handleAddToCart = () => {
+  if (!product) {
+    alert("Select a product first");
+    return;
+  }
 
-    const handleAddToCart = () => {
-    if (!product) {
-      alert("Select a product first");
-      return;
-    }
-
-    dispatch(addToCart({ ...config, id: Date.now() }));
-    dispatch(resetConfigurator());
-    navigate("/cart")
+  const cartItem = {
+    id: Date.now(),
+    product,
+    productType: config.productType,
+    dimensions: config.dimensions,
+    capacity: config.capacity,
+    material: config.material,
+    addOns: config.addOns,
+    totalPrice,
   };
+
+  dispatch(saveCart(userEmail, [...items, cartItem]));
+  dispatch(resetConfigurator());
+  navigate("/cart");
+};
+
 
 
   return (

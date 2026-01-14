@@ -9,22 +9,16 @@ const cartSlice = createSlice({
   name: "cart",
   initialState,
   reducers: {
-    addToCart(state, action) {
-      state.items.push(action.payload),
+    setCart(state, action) {
+      state.items = action.payload || [];
       state.totalQuantity = state.items.length;
     },
-    removeFromCart(state, action) {
-      state.items = state.items.filter(
-        (item, index) => index !== action.payload
-      );
-      state.totalQuantity = state.items.length;
-    },
-    clearCart() {
-      return initialState;
+    clearCart(state) {
+      state.items = [];
+      state.totalQuantity = 0;
     },
   },
 });
 
-export const { addToCart, removeFromCart, clearCart } = cartSlice.actions;
-
+export const { setCart, clearCart } = cartSlice.actions;
 export default cartSlice.reducer;
