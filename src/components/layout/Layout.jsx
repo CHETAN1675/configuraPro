@@ -1,13 +1,9 @@
-import { useSelector } from "react-redux";
 import AppNavbar from "./Navbar";
-import AdminNavbar from "../../admin/components/AdminNavbar";
 
-export default function AppLayout({ children }) {
-  const adminToken = useSelector((state) => state.adminAuth.token);
-
+export default function Layout({ children }) {
   return (
     <>
-      {adminToken ? <AdminNavbar /> : <AppNavbar />}
+      <AppNavbar />
       <main>{children}</main>
     </>
   );
