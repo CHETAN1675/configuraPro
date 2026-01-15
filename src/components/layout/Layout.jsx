@@ -1,17 +1,14 @@
-import { Container } from "react-bootstrap";
+import { useSelector } from "react-redux";
 import AppNavbar from "./Navbar";
-import Footer from "./Footer";
+import AdminNavbar from "../../admin/components/AdminNavbar";
 
 export default function AppLayout({ children }) {
+  const adminToken = useSelector((state) => state.adminAuth.token);
+
   return (
-    <div className="d-flex flex-column min-vh-100">
-      <AppNavbar />
-
-      <Container fluid="md" className="mt-3 flex-grow-1">
-        {children}
-      </Container>
-
-      <Footer />
-    </div>
+    <>
+      {adminToken ? <AdminNavbar /> : <AppNavbar />}
+      <main>{children}</main>
+    </>
   );
 }
