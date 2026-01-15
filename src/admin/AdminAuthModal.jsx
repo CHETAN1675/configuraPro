@@ -1,25 +1,40 @@
 import { Modal, Button, Form, Alert } from "react-bootstrap";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import {adminLogin,adminSignup} from "../features/adminAuth/adminAuthSlice";
 
 export default function AdminAuthModal({ show, onHide }) {
+  const dispatch = useDispatch();
+
+  const { loading, error, token } = useSelector(
+    (state) => state.adminAuth
+  );
+
   const [isSignup, setIsSignup] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
+
+  
+  useEffect(() => {
+    if (token && show) {
+      onHide();
+    }
+  }, [token, show, onHide]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    setError("");
 
-    if (!email || !password) {
-      setError("Email and password are required");
-      return;
+    if (!email || !password) return;
+
+    if (isSignup) {
+      dispatch(adminSignup({ email, password }));
+    } else {
+      dispatch(adminLogin({ email, password }));
     }
+  };
 
-    
-    console.log("Admin Auth:", { email, password, isSignup });
-
-    onHide();
+  const handleSwitchMode = () => {
+    setIsSignup((prev) => !prev);
   };
 
   return (
@@ -40,6 +55,7 @@ export default function AdminAuthModal({ show, onHide }) {
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
+              autoFocus
             />
           </Form.Group>
 
@@ -52,15 +68,24 @@ export default function AdminAuthModal({ show, onHide }) {
             />
           </Form.Group>
 
-          <Button type="submit" className="w-100">
-            {isSignup ? "Create Admin Account" : "Login"}
+          <Button
+            type="submit"
+            className="w-100"
+            disabled={loading}
+          >
+            {loading
+              ? "Please wait..."
+              : isSignup
+              ? "Create Admin Account"
+              : "Login"}
           </Button>
         </Form>
 
         <div className="text-center mt-3">
           <Button
             variant="link"
-            onClick={() => setIsSignup((prev) => !prev)}
+            onClick={handleSwitchMode}
+            disabled={loading}
           >
             {isSignup
               ? "Already an admin? Login"
