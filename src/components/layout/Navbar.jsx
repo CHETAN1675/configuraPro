@@ -4,10 +4,12 @@ import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { logout } from "../../features/auth/authSlice";
 import logo from "../../assets/logo.png";
-
+import AdminAuthModal from "../../admin/AdminAuthModal";
+import { useState } from "react";
 
 
 export default function AppNavbar() {
+const [showAdminAuth, setShowAdminAuth] = useState(false);
 const authToken = useSelector((state) => state.auth.authToken)
 const totalQuantity = useSelector((state)=>state.cart.totalQuantity)
 const navigate = useNavigate();
@@ -59,8 +61,15 @@ const dispatch = useDispatch();
               Dashboard
             </Nav.Link>
           </Nav>
-
+          
           <Nav>
+            <Nav.Link
+            onClick={() => setShowAdminAuth(true)}
+            style={{ cursor: "pointer" }}
+            >
+            Admin
+           </Nav.Link>
+
             {!authToken?
             <Nav.Link as={Link} to="/auth">
               Login
@@ -72,6 +81,10 @@ const dispatch = useDispatch();
           </Nav>
         </Navbar.Collapse>
       </Container>
+       <AdminAuthModal
+        show={showAdminAuth}
+        onHide={() => setShowAdminAuth(false)}
+        />
     </Navbar>
   );
 }
