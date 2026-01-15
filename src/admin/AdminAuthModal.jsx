@@ -1,10 +1,12 @@
 import { Modal, Button, Form, Alert } from "react-bootstrap";
 import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import {adminLogin,adminSignup} from "../features/adminAuth/adminAuthSlice";
+import { useNavigate } from "react-router-dom";
+import { adminLogin, adminSignup } from "../features/adminAuth/adminAuthSlice";
 
 export default function AdminAuthModal({ show, onHide }) {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const { loading, error, token } = useSelector(
     (state) => state.adminAuth
@@ -14,12 +16,13 @@ export default function AdminAuthModal({ show, onHide }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  
+  // Close modal and redirect after successful login/signup
   useEffect(() => {
     if (token && show) {
       onHide();
+      navigate("/admin/dashboard", { replace: true });
     }
-  }, [token, show, onHide]);
+  }, [token, show, onHide, navigate]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
