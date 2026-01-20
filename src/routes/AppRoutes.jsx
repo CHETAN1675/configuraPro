@@ -16,22 +16,6 @@ const OrderSuccess = lazy(() => import("../pages/OrderSuccess"));
 const OrderHistory = lazy(() => import("../pages/OrderHistory"));
 const ConfigSummary = lazy(()=>import("../features/configurator/ConfigSummary"))
 
-// Lazy-loaded configurator steps 
-
-const Dimensions = lazy(() =>
-  import("../features/configurator/steps/Dimensions")
-);
-const Capacity = lazy(() =>
-  import("../features/configurator/steps/Capacity")
-);
-const Material = lazy(() =>
-  import("../features/configurator/steps/Materials")
-);
-const AddOns = lazy(() =>
-  import("../features/configurator/steps/AddOns")
-);
-
-
 
 export default function AppRoutes() {
 
@@ -84,44 +68,7 @@ export default function AppRoutes() {
           }
         />
 
-        {/* Configurator steps */}
-      
-        <Route
-          path="/dimensions"
-          element={
-            <ProtectedRoute>
-              <Dimensions />
-            </ProtectedRoute>
-          }
-        />
-
-        <Route
-          path="/capacity"
-          element={
-            <ProtectedRoute>
-              <Capacity />
-            </ProtectedRoute>
-          }
-        />
-
-        <Route
-          path="/materials"
-          element={
-            <ProtectedRoute>
-              <Material />
-            </ProtectedRoute>
-          }
-        />
-
-        <Route
-          path="/addons"
-          element={
-            <ProtectedRoute>
-              <AddOns />
-            </ProtectedRoute>
-          }
-        />
-
+       
         {/* Cart & orders */}
         <Route
           path="/cart"
