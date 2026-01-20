@@ -26,7 +26,7 @@ export default function Dashboard() {
         ).length;
 
         const delivered = orders.filter(
-          (o) => o.status === "DELIVERED"
+          (o) => o.status === "DELIVERED" || o.status === "COMPLETED"
         ).length;
 
         const cancelled = orders.filter(

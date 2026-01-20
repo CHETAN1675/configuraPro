@@ -23,6 +23,18 @@ export default function Auth() {
     }
   }, [userEmail, dispatch]);
 
+  const resetForm = () => {
+    setEmail("");
+    setPassword("");
+    setConfirmPassword("");
+    setLocalError("");
+  };
+
+  const toggleMode = () => {
+    setIsSignup((prev) => !prev);
+    resetForm();
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
     setLocalError("");
@@ -45,11 +57,14 @@ export default function Auth() {
   };
 
   return (
-    <Container className="d-flex justify-content-center align-items-center" style={{ minHeight: "100vh" }}>
+    <Container
+      className="d-flex justify-content-center align-items-center"
+      style={{ minHeight: "100vh" }}
+    >
       <Card style={{ width: "400px" }}>
         <Card.Body>
           <h3 className="text-center mb-4">
-            {isSignup ? "Signup" : "Login"}
+            {isSignup ? "Create Account" : "Login"}
           </h3>
 
           {(localError || error) && (
@@ -65,6 +80,7 @@ export default function Auth() {
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
+                autoFocus
               />
             </Form.Group>
 
@@ -90,10 +106,43 @@ export default function Auth() {
               </Form.Group>
             )}
 
-            <Button type="submit" className="w-100" disabled={loading}>
-              {loading ? "Please wait..." : isSignup ? "Create Account" : "Login"}
+            <Button
+              type="submit"
+              className="w-100"
+              disabled={loading}
+            >
+              {loading
+                ? "Please wait..."
+                : isSignup
+                ? "Sign Up"
+                : "Login"}
             </Button>
           </Form>
+
+          {/* Toggle */}
+          <div className="text-center mt-3">
+            {isSignup ? (
+              <>
+                <Button
+                  variant="link"
+                  className="p-0"
+                  onClick={toggleMode}
+                >
+                  Already have an account? Login
+                </Button>
+              </>
+            ) : (
+              <>
+                <Button
+                  variant="link"
+                  className="p-0"
+                  onClick={toggleMode}
+                >
+                 Don’t have an account? Sign up
+                </Button>
+              </>
+            )}
+          </div>
         </Card.Body>
       </Card>
     </Container>
