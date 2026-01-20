@@ -1,5 +1,5 @@
 import { useSelector, useDispatch } from "react-redux";
-import { Card, ListGroup, Button } from "react-bootstrap";
+import { Card, ListGroup, Button ,Image} from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import { saveCart } from "../services/cartService";
 
@@ -28,7 +28,7 @@ export default function Cart() {
     navigate("/checkout");
   };
 
-  if (items.length === 0) {
+  if (!items.length) {
     return <p className="mt-4">Your cart is empty</p>;
   }
 
@@ -37,33 +37,66 @@ export default function Cart() {
       <h3>Shopping Cart</h3>
 
       <ListGroup className="mb-3">
-        {items.map((item, index) => (
-          <ListGroup.Item key={item.id || index}>
-            <div className="d-flex justify-content-between align-items-center">
-              <div>
-                <strong>{item.product?.name || "Product"}</strong> —{" "}
-                {item.productType} | {item.dimensions.width}×
-                {item.dimensions.height}×{item.dimensions.depth} |{" "}
-                {item.capacity} | {item.material} |{" "}
-                {item.addOns.join(", ")}
+        {items.map((item, index) => {
+          const {
+            product,
+            productType,
+            dimensions = {},
+            capacity,
+            material,
+            addOns = [],
+            totalPrice,
+          } = item;
+
+          const dimensionText =
+            dimensions.width && dimensions.height && dimensions.depth
+              ? `${dimensions.width} × ${dimensions.height} × ${dimensions.depth}`
+              : "-";
+
+          return (
+            <ListGroup.Item key={item.id || index}>
+              <div className="d-flex gap-3 align-items-start">
+                 {item.product?.image && (
+            <Image
+             src={item.product.image}
+             rounded
+             style={{
+              width: 80,
+              height: 80,
+              objectFit: "contain",
+              flexShrink: 0,
+              }}
+            />
+                 )}
+                <div className="flex-grow-1">
+                  <strong>{product?.name || "Product"}</strong>
+                  <div className="text-muted small">
+                    Type: {productType || "-"} <br />
+                    Capacity: {capacity || "-"} <br />
+                    Material: {material || "-"} <br />
+                    Dimensions: {dimensionText} <br />
+                    Add-ons: {addOns.length ? addOns.join(", ") : "-"}
+                  </div>
+                </div>
+
+                <div className="text-end">
+                  <div className="fw-bold mb-2">₹{totalPrice || 0}</div>
+                  <Button
+                    variant="danger"
+                    size="sm"
+                    onClick={() => handleRemoveItem(index)}
+                  >
+                    Remove
+                  </Button>
+                </div>
               </div>
-              <div>
-                <span className="me-3">${item.totalPrice || 0}</span>
-                <Button
-                  variant="danger"
-                  size="sm"
-                  onClick={() => handleRemoveItem(index)}
-                >
-                  Remove
-                </Button>
-              </div>
-            </div>
-          </ListGroup.Item>
-        ))}
+            </ListGroup.Item>
+          );
+        })}
       </ListGroup>
 
       <Card className="p-3 mb-3">
-        <h5>Total: ${totalPrice}</h5>
+        <h5>Total: ₹{totalPrice}</h5>
         <div className="d-flex gap-2 mt-2">
           <Button variant="secondary" onClick={handleClearCart}>
             Clear Cart

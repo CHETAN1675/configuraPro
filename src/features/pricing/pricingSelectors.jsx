@@ -1,33 +1,34 @@
-import { BASE_PRICES,CAPACITY_MULTIPLIER,MATERIAL_PRICES, ADDON_PRICES,} from "./pricingUtils";
-
-export const selectBasePrice = (state) => {
-  const { productType } = state.configurator;
-  return BASE_PRICES[productType] || 0;
-};
-
-export const selectCapacityPrice = (state) => {
-  const { capacity } = state.configurator;
-  return CAPACITY_MULTIPLIER[capacity] || 1;
-};
-
-export const selectMaterialPrice = (state) => {
-  const { material } = state.configurator;
-  return MATERIAL_PRICES[material] || 0;
-};
-
-export const selectAddOnsPrice = (state) => {
-  const { addOns } = state.configurator;
-
-  return addOns.reduce((total, addOn) => {
-    return total + (ADDON_PRICES[addOn] || 0);
-  }, 0);
+const ADD_ON_PRICES = {
+  Warranty: 300,
+  "Assembly Service": 500,
+  "Delivery Protection": 200,
 };
 
 export const selectTotalPrice = (state) => {
-  const basePrice = selectBasePrice(state);
-  const capacityMultiplier = selectCapacityPrice(state);
-  const materialPrice = selectMaterialPrice(state);
-  const addOnsPrice = selectAddOnsPrice(state);
+  const cfg = state.configurator;
+  if (!cfg) return 0;
 
-  return Math.round(basePrice * capacityMultiplier + materialPrice + addOnsPrice);
+  const { product, material, capacity, addOns } = cfg;
+  let total = 0;
+
+  // material
+  if (material && product?.materials) {
+    const matObj = product.materials.find((m) => m.name === material);
+    if (matObj) total += Number(matObj.price) || 0;
+  }
+
+  // capacity
+  if (capacity && product?.capacities) {
+    const capObj = product.capacities.find((c) => c.name === capacity);
+    if (capObj) total += Number(capObj.price) || 0;
+  }
+
+  // add-ons
+  if (Array.isArray(addOns)) {
+    addOns.forEach((aName) => {
+      total += ADD_ON_PRICES[aName] || 0;
+    });
+  }
+
+  return total;
 };

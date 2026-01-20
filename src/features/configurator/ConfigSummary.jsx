@@ -1,136 +1,81 @@
-import { Card, Alert, ListGroup, Button } from "react-bootstrap";
-import { useSelector,useDispatch } from "react-redux";
-import { Link, useNavigate } from "react-router-dom";
-import {selectPrimaryError} from "../rules/RuleSelectors";
+import { Card, Button,Image } from "react-bootstrap";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import { selectTotalPrice } from "../pricing/pricingSelectors";
-import { resetConfigurator } from "../configurator/configuratorSlice";
 import { saveCart } from "../../services/cartService";
 
-
 export default function ConfigSummary() {
-  const config = useSelector((state) => state.configurator);
-  const product = useSelector((state) => state.configurator.product);
-  const items = useSelector((state) => state.cart.items);
-const userEmail = useSelector((state) => state.auth.userEmail);
-
-
-  const totalPrice = useSelector(selectTotalPrice);
-  const error = useSelector(selectPrimaryError);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const warnings = [];
-  if (config.capacity === "Medium" && config.material === "Plastic") {
-  warnings.push("Plastic with Medium capacity may reduce durability");
-  }
-const handleAddToCart = () => {
-  if (!product) {
-    alert("Select a product first");
-    return;
-  }
-
-  const cartItem = {
-    id: Date.now(),
+  const {
     product,
-    productType: config.productType,
-    dimensions: config.dimensions,
-    capacity: config.capacity,
-    material: config.material,
-    addOns: config.addOns,
-    totalPrice,
+    material,
+    capacity,
+    dimension,
+    addOns,
+  } = useSelector((s) => s.configurator);
+
+  const total = useSelector(selectTotalPrice);
+  const cartItems = useSelector((s) => s.cart.items);
+  const userEmail = useSelector((s) => s.auth.userEmail);
+
+  if (!product) return null;
+
+  const handleAddToCart = () => {
+    if (!userEmail) return;
+
+    // convert "5x6x7" → dimensions object
+    let dimensionsObj = {};
+    if (dimension && dimension.includes("x")) {
+      const [width, height, depth] = dimension.split("x");
+      dimensionsObj = {
+        width,
+        height,
+        depth,
+      };
+    }
+
+    const cartItem = {
+      id: Date.now(),
+      product,
+      productType: product.name,
+      dimensions: dimensionsObj,
+      capacity,
+      material,
+      addOns,
+      totalPrice: total,
+    };
+
+    dispatch(saveCart(userEmail, [...cartItems, cartItem]));
+    navigate("/cart");
   };
 
-  dispatch(saveCart(userEmail, [...items, cartItem]));
-  dispatch(resetConfigurator());
-  navigate("/cart");
-};
-
-
-
   return (
-    <Card className="p-4 mt-4">
-      <h4 className="mb-3">Configuration Summary</h4>
+    <div className="container mt-4">
+      <Card className="p-4">
+        <h4>Configuration Summary</h4>
+        {product.image && (
+        <Image
+        src={product.image}
+        fluid
+        rounded
+        className="my-3"
+        style={{ maxHeight: 200, objectFit: "contain" }}
+        />
+        )}
+        <p><strong>Product:</strong> {product.name}</p>
+        <p><strong>Material:</strong> {material || "-"}</p>
+        <p><strong>Capacity:</strong> {capacity || "-"}</p>
+        <p><strong>Dimension:</strong> {dimension || "-"}</p>
+        <p><strong>Add-ons:</strong> {addOns.length ? addOns.join(", ") : "-"}</p>
 
-      {/* Selected product */}
-      {product && (
-        <p className="mb-3">
-          <strong>Product:</strong> {product.name}
-        </p>
-      )}
+        <h5 className="mt-3">Total: ₹{total}</h5>
 
-      <ListGroup className="mb-3">
-        <ListGroup.Item>
-          <strong>Product Type:</strong>{" "}
-          {config.productType || "-"}
-          <Link to="/product-type" className="ms-2">
-            <Button size="sm" variant="link">Edit</Button>
-          </Link>
-        </ListGroup.Item>
-
-        <ListGroup.Item>
-          <strong>Dimensions:</strong>{" "}
-          {config.dimensions.width
-            ? `${config.dimensions.width} × ${config.dimensions.height} × ${config.dimensions.depth}`
-            : "-"}
-          <Link to="/dimensions" className="ms-2">
-            <Button size="sm" variant="link">Edit</Button>
-          </Link>
-        </ListGroup.Item>
-
-        <ListGroup.Item>
-          <strong>Capacity:</strong>{" "}
-          {config.capacity || "-"}
-          <Link to="/capacity" className="ms-2">
-            <Button size="sm" variant="link">Edit</Button>
-          </Link>
-        </ListGroup.Item>
-
-        <ListGroup.Item>
-          <strong>Material:</strong>{" "}
-          {config.material || "-"}
-          <Link to="/materials" className="ms-2">
-            <Button size="sm" variant="link">Edit</Button>
-          </Link>
-        </ListGroup.Item>
-
-        <ListGroup.Item>
-          <strong>Add-Ons:</strong>{" "}
-          {config.addOns.length > 0
-            ? config.addOns.join(", ")
-            : "-"}
-          <Link to="/addons" className="ms-2">
-            <Button size="sm" variant="link">Edit</Button>
-          </Link>
-        </ListGroup.Item>
-      </ListGroup>
-
-      {/* Blocking error */}
-      {error && <Alert variant="danger">{error}</Alert>}
-
-      {/* Non-blocking warnings */}
-      {warnings.length > 0 && (
-        <Alert variant="warning">
-          <ListGroup variant="flush">
-            {warnings.map((warning, index) => (
-              <ListGroup.Item key={index}>
-                {warning}
-              </ListGroup.Item>
-            ))}
-          </ListGroup>
-        </Alert>
-      )}
-
-      <h5 className="mt-3">
-        Total Price: <strong>${totalPrice}</strong>
-      </h5>
-        <Button
-        variant="success"
-        className="mt-3"
-        onClick={handleAddToCart}
-        disabled={!!error} 
-      >
-        Add to Cart
-      </Button>
-    </Card>
+        <Button className="mt-3" onClick={handleAddToCart}>
+          Add to Cart
+        </Button>
+      </Card>
+    </div>
   );
 }

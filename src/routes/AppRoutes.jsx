@@ -14,11 +14,10 @@ const Cart = lazy(() => import("../pages/Cart"));
 const Checkout = lazy(() => import("../pages/Checkout"));
 const OrderSuccess = lazy(() => import("../pages/OrderSuccess"));
 const OrderHistory = lazy(() => import("../pages/OrderHistory"));
+const ConfigSummary = lazy(()=>import("../features/configurator/ConfigSummary"))
 
 // Lazy-loaded configurator steps 
-const ProductType = lazy(() =>
-  import("../features/configurator/steps/ProductType")
-);
+
 const Dimensions = lazy(() =>
   import("../features/configurator/steps/Dimensions")
 );
@@ -86,15 +85,7 @@ export default function AppRoutes() {
         />
 
         {/* Configurator steps */}
-        <Route
-          path="/product-type"
-          element={
-            <ProtectedRoute>
-              <ProductType />
-            </ProtectedRoute>
-          }
-        />
-
+      
         <Route
           path="/dimensions"
           element={
@@ -141,6 +132,14 @@ export default function AppRoutes() {
           }
         />
 
+       <Route
+          path="/config-summary"
+          element={
+            <ProtectedRoute>
+              <ConfigSummary/>
+            </ProtectedRoute>
+          }
+        />
         <Route
           path="/checkout"
           element={
