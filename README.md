@@ -1,21 +1,79 @@
-<<<<<<< HEAD
-# React + Vite
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
-Currently, two official plugins are available:
+# ConfiguraPro Client
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+ConfiguraPro Client is the customer-facing application where users configure
+products created in the Admin panel.
 
-## React Compiler
+The client only reads data from Firebase and never creates configuration options.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+---
 
-## Expanding the ESLint configuration
+## Tech Stack
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
-=======
-# configuraPro
-A React-based product configurator demonstrating complex state management, routing, and rule-driven UI logic.
->>>>>>> ed640d1d794f07993c4c922c94502394280e1c3f
+- React (Vite)
+- Redux Toolkit
+- Firebase Authentication
+- Firebase Realtime Database
+- React Router
+- Bootstrap
+
+---
+
+## Project Structure
+
+src/
+├─ assets/
+├─ components/
+│  └─ layout/
+│     ├─ Navbar.jsx
+│     ├─ Footer.jsx
+│     └─ Layout.jsx
+├─ features/
+│  ├─ auth/
+│  ├─ cart/
+│  │  └─ cartSlice.jsx
+│  ├─ configurator/
+│  │  ├─ configuratorSlice.jsx
+│  │  └─ ConfigSummary.jsx
+│  └─ pricing/
+│     └─ pricingSelectors.jsx
+├─ pages/
+│  ├─ Auth.jsx
+│  ├─ Configurator.jsx
+│  ├─ Cart.jsx
+│  ├─ Checkout.jsx
+│  ├─ ProductList.jsx
+│  └─ ProductDetails.jsx
+├─ routes/
+│  ├─ AppRoutes.jsx
+│  └─ ProtectedRoute.jsx
+├─ services/
+│  ├─ authApi.jsx
+│  ├─ cartService.jsx
+│  ├─ orderService.jsx
+│  └─ productService.jsx
+├─ store/
+│  └─ store.jsx
+├─ utils/
+│  └─ products.jsx
+├─ App.jsx
+└─ main.jsx
+
+---
+
+## How Data Is Used
+
+Client reads product data created in Admin.
+
+Mapping:
+
+- product.materials → Material selection
+- product.capacities → Capacity selection
+- capacity.dimensions → Dimension selection
+
+Example:
+```js
+const selectedCap = product.capacities.find(
+  c => c.name === selectedCapacity
+);
