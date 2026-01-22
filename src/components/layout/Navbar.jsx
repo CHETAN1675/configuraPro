@@ -71,18 +71,29 @@ export default function AppNavbar() {
             </Nav.Link>
           </Nav>
 
-          {/* Right auth actions */}
+         {/* Right auth actions */}
           <Nav>
-            {!authToken ? (
-              <Nav.Link as={Link} to="/auth">
-                Login
-              </Nav.Link>
-            ) : (
-              <Nav.Link onClick={handleLogout}>
-                Logout
-              </Nav.Link>
-            )}
-          </Nav>
+          {!authToken ? (
+           <>
+           <Nav.Link
+            href="https://admin-configura-pro.vercel.app/"
+            target="_blank"
+            rel="noopener noreferrer"
+           >
+            Admin
+           </Nav.Link>
+
+           <Nav.Link as={Link} to="/auth">
+            Login
+           </Nav.Link>
+         </>
+          ) : (
+          <Nav.Link onClick={handleLogout}>
+            Logout
+          </Nav.Link>
+           )}
+           </Nav>
+
         </Navbar.Collapse>
       </Container>
     </Navbar>
