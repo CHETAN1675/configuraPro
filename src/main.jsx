@@ -5,7 +5,7 @@ import { store } from './store/store.jsx'
 import { BrowserRouter } from 'react-router-dom'
 import App from './App.jsx'
 import './index.css'
-import "bootstrap/dist/css/bootstrap.min.css";
+
 
 
 
