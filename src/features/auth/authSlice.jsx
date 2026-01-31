@@ -3,7 +3,6 @@ import { login, signup } from "../../services/authApi";
 
 const savedAuth = JSON.parse(localStorage.getItem("authData"));
 
-
 export const loginUser = createAsyncThunk(
   "auth/loginUser",
   async ({ email, password }, { rejectWithValue }) => {
@@ -11,7 +10,7 @@ export const loginUser = createAsyncThunk(
       const data = await login(email, password);
       return data;
     } catch (err) {
-      return rejectWithValue(err.message); 
+      return rejectWithValue(err.message);
     }
   }
 );
@@ -35,6 +34,7 @@ const authSlice = createSlice({
     authToken: savedAuth?.token || null,
     loading: false,
     error: null,
+    showAuthModal: false,
   },
   reducers: {
     logout(state) {
@@ -43,6 +43,15 @@ const authSlice = createSlice({
       state.loading = false;
       state.error = null;
       localStorage.removeItem("authData");
+    },
+
+    // Auth Modal state management
+    openAuthModal(state) {
+      state.showAuthModal = true;
+    },
+    closeAuthModal(state) {
+      state.showAuthModal = false;
+      state.error = null;
     },
   },
   extraReducers: (builder) => {
@@ -56,6 +65,7 @@ const authSlice = createSlice({
         state.loading = false;
         state.userEmail = action.payload.email;
         state.authToken = action.payload.idToken;
+        state.showAuthModal = false; 
 
         localStorage.setItem(
           "authData",
@@ -79,6 +89,7 @@ const authSlice = createSlice({
         state.loading = false;
         state.userEmail = action.payload.email;
         state.authToken = action.payload.idToken;
+        state.showAuthModal = false; 
 
         localStorage.setItem(
           "authData",
@@ -95,5 +106,10 @@ const authSlice = createSlice({
   },
 });
 
-export const { logout } = authSlice.actions;
+export const {
+  logout,
+  openAuthModal,
+  closeAuthModal,
+} = authSlice.actions;
+
 export default authSlice.reducer;

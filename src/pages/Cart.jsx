@@ -45,10 +45,7 @@ export default function Cart() {
         <AnimatePresence>
           {items.map((item, index) => {
             const { product, productType, dimensions = {}, capacity, material, addOns = [], totalPrice } = item;
-            const dimensionText =
-              dimensions.width && dimensions.height && dimensions.depth
-                ? `${dimensions.width} × ${dimensions.height} × ${dimensions.depth}`
-                : "-";
+           
 
             return (
               <motion.div
@@ -74,10 +71,10 @@ export default function Cart() {
                 <div className="flex-grow space-y-1 text-gray-800 dark:text-gray-400">
                   <h3 className="font-semibold text-lg">{product?.name || "Product"}</h3>
                   <p className="text-sm">
-                    <span className="font-medium">Type:</span> {productType || "-"} <br />
-                    <span className="font-medium">Capacity:</span> {capacity || "-"} <br />
-                    <span className="font-medium">Material:</span> {material || "-"} <br />
-                    <span className="font-medium">Dimensions:</span> {dimensionText} <br />
+                    <span className="font-medium">Type:</span> {productType} <br />
+                    <span className="font-medium">Capacity:</span> {capacity} <br />
+                    <span className="font-medium">Material:</span> {material} <br />
+                    <span className="font-medium">Dimensions:</span> {dimensions} <br />
                     <span className="font-medium">Add-ons:</span> {addOns.length ? addOns.join(", ") : "-"}
                   </p>
                 </div>

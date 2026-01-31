@@ -18,11 +18,6 @@ export default function Checkout() {
   const totalPrice = items.reduce((sum, item) => sum + (item.totalPrice || 0), 0);
 
   const handlePlaceOrder = async () => {
-    if (!userEmail) {
-      alert("Please login to place an order");
-      return;
-    }
-
     try {
       await saveOrder(userEmail, {
         items,

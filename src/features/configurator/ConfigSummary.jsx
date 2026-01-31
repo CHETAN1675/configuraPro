@@ -4,6 +4,8 @@ import { selectTotalPrice } from "../pricing/pricingSelectors";
 import { saveCart } from "../../services/cartService";
 import { useEffect, useState } from "react";
 import CountUp from "react-countup";
+import { openAuthModal } from "../../features/auth/authSlice";
+
 
 export default function ConfigSummary() {
   const dispatch = useDispatch();
@@ -12,6 +14,7 @@ export default function ConfigSummary() {
   const { product, material, capacity, dimension, addOns } = useSelector(
     (s) => s.configurator
   );
+ 
   const total = useSelector(selectTotalPrice);
   const cartItems = useSelector((s) => s.cart.items);
   const userEmail = useSelector((s) => s.auth.userEmail);
@@ -25,19 +28,18 @@ export default function ConfigSummary() {
   if (!product) return null;
 
   const handleAddToCart = () => {
-    if (!userEmail) return;
-
-    let dimensionsObj = {};
-    if (dimension && dimension.includes("x")) {
-      const [width, height, depth] = dimension.split("x");
-      dimensionsObj = { width, height, depth };
+    
+    if (!userEmail) {
+      dispatch(openAuthModal());
     }
 
+   
+    
     const cartItem = {
       id: Date.now(),
       product,
       productType: product.name,
-      dimensions: dimensionsObj,
+      dimensions: dimension,
       capacity,
       material,
       addOns,
